@@ -1,7 +1,7 @@
  import {
   createBrowserRouter,
- } from "react-router-dom";
- import Magic from "../../migrate/pages/magic"
+} from "react-router-dom";
+import Magic from "../../migrate/pages/magic";
 import LandingScreen from "../screens/landing";
 import Page from "../../migrate/pages";
 import Choose from "../screens/choose";

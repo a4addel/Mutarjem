@@ -1,4 +1,4 @@
-import { BaseDirectory, FileEntry, readDir,readTextFile } from "@tauri-apps/api/fs";
+import { BaseDirectory, FileEntry, readDir, readTextFile } from "@tauri-apps/api/fs";
 import { useEffect, useState } from "react";
 import LandingScreen from "./layout";
 import { Button } from "antd";

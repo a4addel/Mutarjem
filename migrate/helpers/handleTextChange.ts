@@ -1,4 +1,3 @@
-import saveProject from "../../src/helpers/save-edit";
 import { PrimaryListItem } from "../types";
 
 const handleText = (

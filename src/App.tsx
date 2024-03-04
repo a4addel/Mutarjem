@@ -1,7 +1,7 @@
 
  import { router } from "./router";
-  import { RouterProvider } from "react-router-dom";
-  import { createDir, BaseDirectory, readDir, writeFile } from '@tauri-apps/api/fs';
+import { RouterProvider } from "react-router-dom";
+import { createDir, BaseDirectory } from '@tauri-apps/api/fs';
 import { useEffect } from "react";
 
 function App() {

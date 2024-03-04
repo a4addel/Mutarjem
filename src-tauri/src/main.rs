@@ -16,6 +16,7 @@ fn save(text: &str, name: &str) {
 
 
 fn main() {
+    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![save])
         .run(tauri::generate_context!())

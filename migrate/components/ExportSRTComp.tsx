@@ -1,10 +1,10 @@
-import {  Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import ExportSRT from "../helpers/buildSrt";
 import { PrimaryListItem } from "../types";
 import { useState } from "react";
 import classname from "classnames";
 import { useToggle } from "react-use";
- import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
+import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");

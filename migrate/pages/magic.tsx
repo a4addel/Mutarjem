@@ -13,7 +13,7 @@ import { PrimaryListItem } from "../types";
 
 import ExportSRTComp from "../components/ExportSRTComp";
  
-import LayoutScreen from "../../src/screens/layout"
+import LayoutScreen from "../../src/screens/layout";
 import saveProject from "../../src/helpers/save-edit";
 import { useParams } from "react-router-dom";
 import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
