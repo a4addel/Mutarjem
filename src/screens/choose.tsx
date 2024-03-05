@@ -11,7 +11,7 @@ import Layout from "./layout";
 
 async function getProjects() {
     try {
-        const s = await readDir("tans/projects", { dir: BaseDirectory.Home })
+        const s = await readDir("Motarjem/projects", { dir: BaseDirectory.Home })
         return s;
     } catch (error) {
         return [] as FileEntry[]
@@ -28,7 +28,7 @@ async function getNames(): Promise<Project[]> {
     for await (let item of s) {
 
 
-        const name = (await readTextFile(`tans/projects/${item.name}/meta.text`, { dir: BaseDirectory.Home }));
+        const name = (await readTextFile(`Motarjem/projects/${item.name}/meta.text`, { dir: BaseDirectory.Home }));
         if (!name) continue;
 
         sss.push({

@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import classnames from "classnames";
-import { Virtuoso } from "react-virtuoso";
-import TextComponent from "../components/TextComponent";
-import AyaComponent from "../components/AyaComponent";
-import handleModalSelect from "../helpers/handleModalSelect";
-import handleText from "../helpers/handleTextChange";
+import { Virtuoso, } from "react-virtuoso";
+import TextComponent from "../components/text";
+import AyaComponent from "../components/ayah";
+import handleModalSelect from "../helpers/handle-modal-select";
+import handleText from "../helpers/handle-text-change";
 import { PrimaryListItem } from "../types";
 
 // import DeepL_JOSN_To_State_Format from "../helpers/DeepL_JOSN_To_State_Format";
 // import DallEData from "../data/data.json";
 
 
-import ExportSRTComp from "../components/ExportSRTComp";
- 
+import ExportSRTComp from "../components/export-srt";
+
 import LayoutScreen from "../../src/screens/layout";
 import saveProject from "../../src/helpers/save-edit";
 import { useParams } from "react-router-dom";
 import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
+import { Flex } from "antd";
 
- 
+
 const Page: React.FC = () => {
+ 
   let { id } = useParams();
 
   const [rows, setRows] = useState<Array<PrimaryListItem>>();
@@ -35,9 +37,13 @@ const Page: React.FC = () => {
     //   //@ts-ignore
     //   ...DeepL_JOSN_To_State_Format(DallEData.json),
     // ]);
-    readTextFile(`tans/projects/${id}/text.text`, {dir: BaseDirectory.Home }).then(e => {
+    readTextFile(`Motarjem/projects/${id}/text.text`, {dir: BaseDirectory.Home }).then(e => {
       setRows(JSON.parse(e))
+    }).finally(() => {
+      
     })
+
+  
   }, []);
 
   useEffect(() => {
@@ -47,10 +53,11 @@ const Page: React.FC = () => {
   return (
     <LayoutScreen>
       <ExportSRTComp state={rows || []} />
-
+     
       <div className={classnames("max-w-7xl", "mx-auto", "w-full")}>
 
         <Virtuoso
+          
           autoFocus
           className={classnames(
             "max-w-6xl",
@@ -62,7 +69,8 @@ const Page: React.FC = () => {
             "mx-auto",
             "block",
             "h-screen",
-            "w-full"
+            "w-full",
+            "p-[17px]"
           )}
           data={rows}
           style={{
@@ -71,11 +79,13 @@ const Page: React.FC = () => {
             width:"100%",
             border: "1px solid black",
             marginBlock: "0 auto",
+            padding: "10px 0"
+            
           }}
           
           totalCount={rows?.length ?? 0}
           controls
-          itemContent={(index, data) => {
+           itemContent={(index, data) => {
             if (!data) return <></>;
 
             return (
@@ -85,40 +95,31 @@ const Page: React.FC = () => {
                 className={classnames(
                   "flex",
                   "flex-row",
-                  "gap-2",
                   "border",
                   "border-spacing-1",
                   "border-cyan-700",
                   "my-5",
-                  "w-full",
                   "block",
+                  
                 )}
               >
                 <span
                   className={classnames(
-                    "bg-slate-500",
-                    "p-2",
+                    "bg-sky-500",
                     "text-white",
                     "font-bold",
-                    "w-3",
+                    "w-5",
+                    "py-5"
+                    
                   )}
-                ></span>
-                <div className={classnames("flex", "flex-col", "w-full")}>
-                  <div className={classnames("bg-slate-500", "p-2", "w-full")}>
-                    <span
-                      className={classnames("p-3", "text-white", "font-bold")}
-                    >
-                      <span>({index + 1})</span> {"  "}
-                      {data.data.map((e) => {
-                        if (e.type === "aya")
-                          return (
-                            <span
-                              className={classnames("text-yellow-300")}
-                            >{` {${e.data.selected}} `}</span>
-                          );
-                        return e.data || e.initialData;
-                      })}
-                    </span>
+                >
+                  <div className="rotate-90">({index + 1})</div>
+                </span>
+                <Flex className={classnames("flex", "flex-col", "w-full")}>
+                  <div className={classnames("bg-sky-500", "p-2", "w-full", "text-center", "w-[calc(100%-20px)]")}>
+                   
+                      
+                      {data.data.map((e) =>  (e.type === "aya") ? <span className="font-yellow gray">{e.data.selected}</span>:  e.data || e.initialData)}
                   </div>
 
                   {(data?.data || []).map((e, i) => {
@@ -131,7 +132,8 @@ const Page: React.FC = () => {
                             const text = JSON.stringify(new_rows)
                             saveProject({
                               projectID: id || "",
-                              text:text
+                              text:text,
+                              itemCount: index + ""
                             })
                           }
                            
@@ -160,14 +162,15 @@ const Page: React.FC = () => {
                           setRows(new_rows);
                           saveProject({
                             projectID: id || "",
-                            text: text
+                            text: text,
+                            itemCount:index + ""
                           })
                         }}
                         key={i}
                       />
                     );
                   })}
-                </div>
+                </Flex>
               </div>
             );
           }}

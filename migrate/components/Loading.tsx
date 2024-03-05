@@ -1,5 +1,7 @@
+import React from "react";
 import { Spin } from "antd";
 import classnames from "classnames";
+React;
 
 const Loading = ({ isLoading }: { isLoading: boolean }) => {
   if (isLoading)

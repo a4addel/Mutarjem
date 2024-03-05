@@ -9,7 +9,7 @@ export default async function editProjectName({
     try {
         const id = v4();
 
-        await writeFile(`tans/projects/${projectID}/meta.text`, projectName, { dir: BaseDirectory.Home });
+        await writeFile(`Motarjem/projects/${projectID}/meta.text`, projectName, { dir: BaseDirectory.Home });
         return projectName;
 
     } catch (error) {

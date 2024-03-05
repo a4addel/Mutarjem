@@ -28,7 +28,7 @@ const TextComponent: React.FC<TextComponentProps> = ({
         "text-left",
         "shadow-xl",
         "my-2",
-        "w-4/5",
+        "w-[calc(100%-20px)]"
       )}
       value={v}
       size="large"

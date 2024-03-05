@@ -4,14 +4,14 @@ import * as yup from "yup";
 import classnames from "classnames";
 import { useToggle } from "react-use";
 import Languages from "../languages";
-import DeepL_JOSN_To_State_Format from "../helpers/DeepL_JOSN_To_State_Format";
+import DeepL_JOSN_To_State_Format from "../helpers/deepl-to-state";
 import { useNavigate } from "react-router-dom";
 import { fetch } from "@tauri-apps/api/http";
 import DallEData from "../data/data.json";
 
 import LayoutScreen from "../../src/screens/layout";
 import createProject from "../../src/helpers/create-project";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 type Translations = {
   identifier: string;
   language: string;
@@ -25,10 +25,17 @@ type Translations = {
 
 
 export default function Home() {
-  const [disabled, _setDisabled] = useToggle(false);
+  const [loading, setLoading] = useToggle(false);
   const n = useNavigate()
   const [edition, setEditions] = useState<Translations>([]);
-
+  const [failed_toget_edition, setFailed_toget_edition] = useState("")
+  useEffect(() => {
+    let d = setTimeout(() => {
+      setFailed_toget_edition("")
+    }, 10000)
+    return () => clearTimeout(d)
+  }, [failed_toget_edition])
+  
   const editions = ((edition || []) as Translations)?.map((e) => ({
     label: e.identifier,
     value: e.identifier,
@@ -54,8 +61,8 @@ export default function Home() {
           validationSchema={schema}
           initialValues={{
             project_name: "",
-            input_lang: "EN",
-            language: "EN",
+            input_lang: "",
+            language: "",
             file: "",
             qc_edition: [],
           }}
@@ -106,6 +113,7 @@ export default function Home() {
                             console.log("sssssssssssssss");
                             // @ts-ignore
 
+                            setLoading(true)
                             fetch(`http://api.alquran.cloud/v1/edition?language=${e || "EN"}&type=translation`, {
                               method: "GET"
                             }).then(res => {
@@ -115,7 +123,13 @@ export default function Home() {
 
                                 // @ts-ignore/
                                 setEditions(res.data.data || [])
+                              } else {
+                                setFailed_toget_edition("لا يوجد اتصال بالانترنت")
                               }
+                            }).catch((e) => {
+                              setFailed_toget_edition("لا يوجد اتصال بالانترنت")
+                            }).finally(() => {
+                              setLoading(false)
                             })
 
 
@@ -129,10 +143,11 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-                <Form.Item label="قواميس القران" required>
+                <Form.Item  label="قواميس القران" required>
                   <Field name="qc_edition">
                     {({ field, form }: FieldProps) => (
                       <Select
+                      loading={loading}
                         value={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
                         onChange={(e) => form.setFieldValue(field.name, e)}
@@ -169,6 +184,7 @@ export default function Home() {
                   <ErrorMessage className="block"  name="qc_edition" />
                   <br/>
                   <ErrorMessage className="block"  name="file" />
+                  {failed_toget_edition}
                 </Flex>
               </AntForm>
             );

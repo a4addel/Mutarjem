@@ -37,6 +37,7 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
           value: e,
         });
       }}
+      className="w-[calc(100%-20px)]"
       value={selected}
       options={list.map((e) => ({
         label: (

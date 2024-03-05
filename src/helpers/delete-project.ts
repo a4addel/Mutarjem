@@ -7,7 +7,7 @@ export default async function deleteProject({
 
     try {
 
-        await removeDir(`tans/projects/${projectID}`, { dir: BaseDirectory.Home, recursive: true});
+        await removeDir(`Motarjem/projects/${projectID}`, { dir: BaseDirectory.Home, recursive: true});
         return true;
 
     } catch (error) {

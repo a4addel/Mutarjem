@@ -3,14 +3,18 @@ import { Button, Flex } from "antd";
 import { Link } from "react-router-dom";
 
 
-
 function LandingScreen(ss: any) {
     return <>
     <span className="fixed">
-    <Link to={"/"}><Button ><HomeFilled/></Button></Link>
+        
+    <Link to={"/"}>
+        <Button >
+            <HomeFilled/>
+        </Button>
+    </Link>
 
     </span>
-        <Flex className="p-8 w-full max-w-8xl">
+        <Flex className="px-20 w-full max-w-6xl">
         {ss.children}
         </Flex>
     </>

@@ -9,9 +9,10 @@ export default async function createProject({
     try {
         const id = v4();
 
-        await createDir(`tans/projects/${id}` ,{dir: BaseDirectory.Home });
-        await writeFile(`tans/projects/${id}/meta.text`, projectName ,{dir: BaseDirectory.Home });
-        await writeFile(`tans/projects/${id}/text.text`, text ,{dir: BaseDirectory.Home });
+        await createDir(`Motarjem/projects/${id}` ,{dir: BaseDirectory.Home });
+        await writeFile(`Motarjem/projects/${id}/meta.text`, projectName ,{dir: BaseDirectory.Home });
+        await writeFile(`Motarjem/projects/${id}/memo.text`, "0" ,{dir: BaseDirectory.Home });
+        await writeFile(`Motarjem/projects/${id}/text.text`, text ,{dir: BaseDirectory.Home });
         return id;
 
     } catch (error) {

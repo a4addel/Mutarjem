@@ -1,10 +1,13 @@
 import { Button, Form, Input, Modal } from "antd";
-import ExportSRT from "../helpers/buildSrt";
+import ExportSRT from "../helpers/build-srt";
 import { PrimaryListItem } from "../types";
 import { useState } from "react";
 import classname from "classnames";
 import { useToggle } from "react-use";
 import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
+
+
+
 export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
@@ -13,10 +16,10 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
   return (
     <>
       <Button
-        className={classname("fixed", "top-4", "right-4", "z-20")}
+        className={classname("fixed", "top-0", "left-0", "z-20")}
         onClick={() => toggle(true)}
       >
-        Done
+        استخراج
       </Button>
       <Modal
         destroyOnClose
@@ -29,7 +32,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
               setIsSRT(false);
             }}
           >
-            close
+            إغلاق
           </Button>
         }
         open={open}
@@ -37,7 +40,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
       >
         <div className={classname("bg-slate-400", "p-5")}>
           <div className={classname("flex", "flex-row")}>
-            <Form.Item label=".SRT file name">
+            <Form.Item label=".SRT اسم ملف">
               <Input
                 required
                 value={name}
@@ -50,7 +53,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
                 setIsSRT(true);
               }}
             >
-              Export
+              تصدير
               <RightOutlined />
             </Button>
           </div>
@@ -61,7 +64,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
               download={`${name}.srt`}
               href={link}
             >
-              {!name ? "input a filename" : `${name}`}.srt
+              {!name ? "اخدل اسماََ للملف:" : `${name}`}.srt
             </Button>
           )}
         </div>

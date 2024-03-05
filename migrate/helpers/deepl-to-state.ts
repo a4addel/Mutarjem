@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 import { Item, PrimaryListItem } from "../types";
-import createAyaObject from "./createAyaObject";
-import createText from "./createText";
+import createAyaObject from "./create-ayah-object";
+import createText from "./create-text";
 import Prepare_Edition_ayas from "./Prepare_Edition_ayas";
 import parseTranslation from "./parseTranslation";
 
