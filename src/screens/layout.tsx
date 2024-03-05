@@ -1,12 +1,18 @@
-import { Button } from "antd";
+import { HomeFilled } from "@ant-design/icons";
+import { Button, Flex } from "antd";
 import { Link } from "react-router-dom";
 
 
 
 function LandingScreen(ss: any) {
     return <>
-        <Link to={"/"}><Button className="w-full !h-20 text-5xl" >HOME</Button></Link>
+    <span className="fixed">
+    <Link to={"/"}><Button ><HomeFilled/></Button></Link>
+
+    </span>
+        <Flex className="p-8 w-full max-w-8xl">
         {ss.children}
+        </Flex>
     </>
 }
 

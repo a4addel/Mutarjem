@@ -1,10 +1,9 @@
-import { Form as AntForm, Select, Input, Button, Form } from "antd";
+import { Form as AntForm, Select, Input, Button, Form, Flex } from "antd";
 import { ErrorMessage, Field, FieldProps, Formik } from "formik";
 import * as yup from "yup";
 import classnames from "classnames";
 import { useToggle } from "react-use";
 import Languages from "../languages";
-import { Link } from "react-router-dom";
 import DeepL_JOSN_To_State_Format from "../helpers/DeepL_JOSN_To_State_Format";
 import { useNavigate } from "react-router-dom";
 import { fetch } from "@tauri-apps/api/http";
@@ -51,7 +50,7 @@ export default function Home() {
   return (
     <LayoutScreen>
       <div className={classnames("w-full", "max-w-lg", "mx-auto")}>
-          <Formik
+        <Formik
           validationSchema={schema}
           initialValues={{
             project_name: "",
@@ -67,7 +66,7 @@ export default function Home() {
             return (
               <AntForm className={classnames("flex", "flex-col", "gap-1")}>
                 {JSON.stringify(form.values, null, 2)}
-                <Form.Item label="Project name" required>
+                <Form.Item label="إسم المشروع" required>
                   <Field name="project_name">
                     {({ field }: FieldProps) => (
                       <Input
@@ -79,8 +78,8 @@ export default function Home() {
                     )}
                   </Field>
                 </Form.Item>
-                <ErrorMessage name="project_name" />
-                <Form.Item label="Source Language" required>
+
+                <Form.Item label="لغة المصدر" required>
                   <Field name="input_lang">
                     {({ field }: FieldProps) => (
                       <Select
@@ -92,35 +91,35 @@ export default function Home() {
                     )}
                   </Field>
                 </Form.Item>
-                <ErrorMessage name="input_lang" />
 
-                <Form.Item label="Target Language" required>
+
+                <Form.Item label="اللغه الهدف" required>
                   <Field name={"language"}>
                     {({ field, form }: FieldProps) => {
                       return (
                         <Select
                           className={classnames("flex-grow", "flex-shrink-0")}
                           defaultValue={form.values.language}
-                          onChange={ (e) => {
-                               form.setFieldValue(field.name, e);
-                              form.setFieldValue("qc_edition", []);
-                              console.log("sssssssssssssss");
-                              // @ts-ignore
+                          onChange={(e) => {
+                            form.setFieldValue(field.name, e);
+                            form.setFieldValue("qc_edition", []);
+                            console.log("sssssssssssssss");
+                            // @ts-ignore
 
-                              fetch(`http://api.alquran.cloud/v1/edition?language=${e || "EN"}&type=translation`, {
-                                method: "GET"
-                              }).then(res => {
+                            fetch(`http://api.alquran.cloud/v1/edition?language=${e || "EN"}&type=translation`, {
+                              method: "GET"
+                            }).then(res => {
                               if (res.ok) {
-                                  // @ts-ignore/
+                                // @ts-ignore/
                                 console.log(res.data.data);
 
                                 // @ts-ignore/
                                 setEditions(res.data.data || [])
                               }
-                              })
+                            })
 
-                             
- 
+
+
 
                           }}
                           options={Languages}
@@ -130,9 +129,7 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-                <ErrorMessage name="language" />
-
-                <Form.Item label="Source Language" required>
+                <Form.Item label="قواميس القران" required>
                   <Field name="qc_edition">
                     {({ field, form }: FieldProps) => (
                       <Select
@@ -147,7 +144,7 @@ export default function Home() {
                 </Form.Item>
                 <ErrorMessage name="qc_edition" />
 
-                {form.errors.qc_edition && <span>{form.errors.qc_edition}</span>}
+
                 <Input
                   required
                   onChange={(e) =>
@@ -158,29 +155,41 @@ export default function Home() {
                   name="file"
                   type="file"
                 />
-                <ErrorMessage name="file" />
+
                 <Button onClick={() => form.handleSubmit()}  >
-                  Let's Dance, Baby!
+                  هيا!
                 </Button>
-                <Link to={"/magic"}>Magic</Link>
+                <Flex className="text-red">
+                  <ErrorMessage className="block" name="project_name" />
+                  <br/>
+                  <ErrorMessage className="block"  name="input_lang" />
+                  <br/>
+                  <ErrorMessage className="block"  name="language" />
+                  <br/>
+                  <ErrorMessage className="block"  name="qc_edition" />
+                  <br/>
+                  <ErrorMessage className="block"  name="file" />
+                </Flex>
               </AntForm>
             );
           }}
+
         </Formik>
+
       </div></LayoutScreen>
   );
 }
 
 const schema = yup.object().shape({
-  project_name: yup.string().required(),
-  input_lang: yup.string().required(),
+  project_name: yup.string().required("ادخل اسماَ للمشروع"),
+  input_lang: yup.string().required("اختر لغة المصدر"),
   language: yup
     .string()
-    .required()
+    .required("اختر اللغة الهدف")
     .notOneOf(
       [yup.ref("input_lang")],
-      "target language cannot be the same as source language",
+      `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`,
     ),
-  file: yup.mixed().required(),
-  qc_edition: yup.array().of(yup.string()).min(1),
+  file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
+  qc_edition: yup.array().of(yup.string()).min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
 });

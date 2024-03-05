@@ -48,7 +48,7 @@ const Page: React.FC = () => {
     <LayoutScreen>
       <ExportSRTComp state={rows || []} />
 
-      <div className={classnames("max-w-7xl", "mx-auto")}>
+      <div className={classnames("max-w-7xl", "mx-auto", "w-full")}>
 
         <Virtuoso
           autoFocus
@@ -61,17 +61,18 @@ const Page: React.FC = () => {
             "overflow-x-hidden",
             "mx-auto",
             "block",
-            "h-screen"
+            "h-screen",
+            "w-full"
           )}
           data={rows}
           style={{
             margin: "0",
-            height: "100vh",
-
+            height: "clac(100vh - 200px)",
+            width:"100%",
             border: "1px solid black",
             marginBlock: "0 auto",
           }}
-          height={"500px"}
+          
           totalCount={rows?.length ?? 0}
           controls
           itemContent={(index, data) => {

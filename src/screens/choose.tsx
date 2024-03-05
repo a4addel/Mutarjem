@@ -1,13 +1,14 @@
 import { BaseDirectory, FileEntry, readDir, readTextFile } from "@tauri-apps/api/fs";
 import { useEffect, useState } from "react";
-import LandingScreen from "./layout";
-import { Button, Flex, Input, Modal } from "antd";
+import { Button, Input, Modal, Table } from "antd";
 import { Link } from "react-router-dom";
-import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { useToggle } from "react-use";
 
 import deleteProject from "../helpers/delete-project";
 import edit_project_name from "../helpers/edit-project-name";
+
+import Layout from "./layout";
+
 async function getProjects() {
     try {
         const s = await readDir("tans/projects", { dir: BaseDirectory.Home })
@@ -15,7 +16,7 @@ async function getProjects() {
     } catch (error) {
         return [] as FileEntry[]
     }
-};
+}
 
 
 type Project = {
@@ -50,17 +51,30 @@ export default function Choose() {
         }
         main()
     }, [])
-    return <LandingScreen>
-        {s.map(e => (<Flex>
-            <Link className="w-1/2" to={`/magic/${e.id}`}>
-                <Button className="w-full flex-grow-0  ">
-                    <span className="block w-full truncate">{e.name}</span>
-                    </Button></Link>
-            <EditProjectName curruntName={e.name} projectID={e.id} />
-            <DeleteProject projectID={e.id} />
+    return <Layout >
+        <Table dataSource={s} className="w-full">
+            <Table.Column  render={(e) => {
+                return  <Link className="w-1/2 block underline" to={`/magic/${e.id}`}>
+                <span className="block w-full truncate">{e.name}</span>
+            </Link>
+            }}>
 
-        </Flex>))}
-    </LandingScreen>
+            </Table.Column>
+            <Table.Column  render={(e) => {
+                return   <EditProjectName curruntName={e.name} projectID={e.id} />
+            }}>
+
+            </Table.Column>
+            <Table.Column  render={(e) => {
+                return   <DeleteProject projectID={e.id} />
+            }}>
+
+            </Table.Column>
+        </Table>
+          
+
+
+     </Layout>
 
 
 }
@@ -69,12 +83,12 @@ function DeleteProject({ projectID }: { projectID: string }) {
 
     const [open, toogle] = useToggle(false);
     return <>
-        <Button danger  onClick={() => toogle(true)}>
-            <DeleteFilled />
+        <Button danger onClick={() => toogle(true)}>
+            حذف
         </Button>
-        
+
         <Modal open={open} onCancel={toogle} okButtonProps={{ style: { display: "none" } }}>
-             <Button onClick={async () => {
+            <Button onClick={async () => {
                 await deleteProject({ projectID: projectID });
                 window.location.reload()
             }} danger className="w-full h-20 text-5xl">DELETE</Button>
@@ -90,14 +104,14 @@ function EditProjectName({ projectID, curruntName }: { projectID: string, currun
     const [name, setName] = useState(curruntName);
     return <>
         <Button className="block  " onClick={() => toogle(true)}>
-            <EditFilled />
+            تعديل
         </Button>
         <Modal open={open} onCancel={toogle} okButtonProps={{ style: { display: "none" } }}>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
             <Button onClick={async () => {
                 await edit_project_name({ projectID: projectID, projectName: name });
                 window.location.reload()
-            }}   className="w-full h-20 text-5xl overflow-hidden">SUBMIT</Button>
+            }} className="w-full h-20 text-5xl overflow-hidden">SUBMIT</Button>
         </Modal>
 
     </>
