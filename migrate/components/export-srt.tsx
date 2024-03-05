@@ -6,8 +6,6 @@ import classname from "classnames";
 import { useToggle } from "react-use";
 import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 
-
-
 export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");

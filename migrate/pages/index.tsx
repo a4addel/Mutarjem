@@ -22,35 +22,31 @@ type Translations = {
   direction: string;
 }[];
 
-
-
 export default function Home() {
   const [loading, setLoading] = useToggle(false);
-  const n = useNavigate()
+  const n = useNavigate();
   const [edition, setEditions] = useState<Translations>([]);
-  const [failed_toget_edition, setFailed_toget_edition] = useState("")
+  const [failed_toget_edition, setFailed_toget_edition] = useState("");
   useEffect(() => {
     let d = setTimeout(() => {
-      setFailed_toget_edition("")
-    }, 10000)
-    return () => clearTimeout(d)
-  }, [failed_toget_edition])
-  
+      setFailed_toget_edition("");
+    }, 10000);
+    return () => clearTimeout(d);
+  }, [failed_toget_edition]);
+
   const editions = ((edition || []) as Translations)?.map((e) => ({
     label: e.identifier,
     value: e.identifier,
   }));
 
-
-
   const onSubmit = async (data: yup.InferType<typeof schema>) => {
     const id = await createProject({
       projectName: data.project_name,
       // @ts-ignore
-      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json))
-    })
+      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)),
+    });
     if (id) {
-      n(`/magic/${id}`)
+      n(`/magic/${id}`);
     }
   };
 
@@ -66,7 +62,6 @@ export default function Home() {
             file: "",
             qc_edition: [],
           }}
-
           onSubmit={onSubmit}
         >
           {(form) => {
@@ -79,8 +74,9 @@ export default function Home() {
                       <Input
                         value={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
-                        onChange={(e) => form.setFieldValue(field.name, e.target.value)}
-
+                        onChange={(e) =>
+                          form.setFieldValue(field.name, e.target.value)
+                        }
                       />
                     )}
                   </Field>
@@ -99,7 +95,6 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-
                 <Form.Item label="اللغه الهدف" required>
                   <Field name={"language"}>
                     {({ field, form }: FieldProps) => {
@@ -113,28 +108,34 @@ export default function Home() {
                             console.log("sssssssssssssss");
                             // @ts-ignore
 
-                            setLoading(true)
-                            fetch(`http://api.alquran.cloud/v1/edition?language=${e || "EN"}&type=translation`, {
-                              method: "GET"
-                            }).then(res => {
-                              if (res.ok) {
-                                // @ts-ignore/
-                                console.log(res.data.data);
+                            setLoading(true);
+                            fetch(
+                              `http://api.alquran.cloud/v1/edition?language=${e || "EN"}&type=translation`,
+                              {
+                                method: "GET",
+                              },
+                            )
+                              .then((res) => {
+                                if (res.ok) {
+                                  // @ts-ignore/
+                                  console.log(res.data.data);
 
-                                // @ts-ignore/
-                                setEditions(res.data.data || [])
-                              } else {
-                                setFailed_toget_edition("لا يوجد اتصال بالانترنت")
-                              }
-                            }).catch((e) => {
-                              setFailed_toget_edition("لا يوجد اتصال بالانترنت")
-                            }).finally(() => {
-                              setLoading(false)
-                            })
-
-
-
-
+                                  // @ts-ignore/
+                                  setEditions(res.data.data || []);
+                                } else {
+                                  setFailed_toget_edition(
+                                    "لا يوجد اتصال بالانترنت",
+                                  );
+                                }
+                              })
+                              .catch((e) => {
+                                setFailed_toget_edition(
+                                  "لا يوجد اتصال بالانترنت",
+                                );
+                              })
+                              .finally(() => {
+                                setLoading(false);
+                              });
                           }}
                           options={Languages}
                         />
@@ -143,11 +144,11 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-                <Form.Item  label="قواميس القران" required>
+                <Form.Item label="قواميس القران" required>
                   <Field name="qc_edition">
                     {({ field, form }: FieldProps) => (
                       <Select
-                      loading={loading}
+                        loading={loading}
                         value={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
                         onChange={(e) => form.setFieldValue(field.name, e)}
@@ -158,7 +159,6 @@ export default function Home() {
                   </Field>
                 </Form.Item>
                 <ErrorMessage name="qc_edition" />
-
 
                 <Input
                   required
@@ -171,28 +171,25 @@ export default function Home() {
                   type="file"
                 />
 
-                <Button onClick={() => form.handleSubmit()}  >
-                  هيا!
-                </Button>
+                <Button onClick={() => form.handleSubmit()}>هيا!</Button>
                 <Flex className="text-red">
                   <ErrorMessage className="block" name="project_name" />
-                  <br/>
-                  <ErrorMessage className="block"  name="input_lang" />
-                  <br/>
-                  <ErrorMessage className="block"  name="language" />
-                  <br/>
-                  <ErrorMessage className="block"  name="qc_edition" />
-                  <br/>
-                  <ErrorMessage className="block"  name="file" />
+                  <br />
+                  <ErrorMessage className="block" name="input_lang" />
+                  <br />
+                  <ErrorMessage className="block" name="language" />
+                  <br />
+                  <ErrorMessage className="block" name="qc_edition" />
+                  <br />
+                  <ErrorMessage className="block" name="file" />
                   {failed_toget_edition}
                 </Flex>
               </AntForm>
             );
           }}
-
         </Formik>
-
-      </div></LayoutScreen>
+      </div>
+    </LayoutScreen>
   );
 }
 
@@ -207,5 +204,8 @@ const schema = yup.object().shape({
       `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`,
     ),
   file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
-  qc_edition: yup.array().of(yup.string()).min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
+  qc_edition: yup
+    .array()
+    .of(yup.string())
+    .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
 });

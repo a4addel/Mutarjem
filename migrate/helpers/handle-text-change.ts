@@ -26,10 +26,9 @@ const handleText = (
     return row;
   });
   try {
-     return newRows;
+    return newRows;
   } catch (error) {
     return newRows;
-
   }
 };
 

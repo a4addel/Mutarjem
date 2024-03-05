@@ -1,6 +1,4 @@
- import {
-  createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Magic from "../../migrate/pages/magic";
 import LandingScreen from "../screens/landing";
 import Page from "../../migrate/pages";
@@ -9,7 +7,7 @@ import Choose from "../screens/choose";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingScreen />
+    element: <LandingScreen />,
   },
   {
     path: "/magic/:id",
@@ -24,4 +22,3 @@ export const router = createBrowserRouter([
     element: <Choose />,
   },
 ]);
- 

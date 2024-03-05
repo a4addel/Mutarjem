@@ -44,6 +44,6 @@ function buildPrimartItem(a: Item): PrimaryListItem {
       return true;
     }),
     id: v4(),
-    title: parsedTranslation.content,
+    title: a.content,
   };
 }
