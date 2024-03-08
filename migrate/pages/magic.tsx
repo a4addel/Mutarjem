@@ -19,16 +19,11 @@ import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { Card, Flex } from "antd";
 
 const Page: React.FC = () => {
-  useEffect(() => {
-    const ele = document.querySelector(`[data-test-id="virtuoso-item-list"]`);
-    if (ele) {
-      ele.classList.add("snap-y");
-      ele.classList.add("snap-proximity");
-    }
-  }, []);
+ 
   let { id } = useParams();
 
   const [rows, setRows] = useState<Array<PrimaryListItem>>();
+  const [name, setName] = useState<string>("");
 
   React.useEffect(() => {
     // setRows([
@@ -41,12 +36,22 @@ const Page: React.FC = () => {
     //   //@ts-ignore
     //   ...DeepL_JOSN_To_State_Format(DallEData.json),
     // ]);
+    readTextFile(`Motarjem/projects/${id}/meta.text`, {
+      dir: BaseDirectory.Home,
+    })
+      .then((e) => {        
+        setName(e.split("\n")[0] || "");
+      })
+      .catch(() => {})
+      .finally(() => {});
+      
     readTextFile(`Motarjem/projects/${id}/text.text`, {
       dir: BaseDirectory.Home,
     })
       .then((e) => {
         setRows(JSON.parse(e));
       })
+      .catch(() => {})
       .finally(() => {});
   }, []);
 
@@ -54,14 +59,11 @@ const Page: React.FC = () => {
     localStorage.setItem("data", JSON.stringify(rows));
   }, [rows]);
 
-  const [height, setHeight] = useState(0);
-  const red = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    setHeight(red.current?.getBoundingClientRect().height || 0);
-  }, [height]);
+   const red = useRef<HTMLDivElement>(null);
+ 
   return (
     <LayoutScreen>
-      <ExportSRTComp state={rows || []} />
+      <ExportSRTComp state={rows || []} defaultName={name}/>
 
       <div className={classnames("max-w-7xl", "mx-auto", "w-full")} ref={red}>
         <Virtuoso
@@ -105,8 +107,7 @@ const Page: React.FC = () => {
                   "flex-col",
                   "my-5",
                   "block",
-                  "snap-start",
-                )}
+                 )}
               >
                 <Flex className={classnames("flex", "flex-col", "w-full")}>
                   <div

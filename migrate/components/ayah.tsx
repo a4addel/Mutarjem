@@ -39,6 +39,7 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
       }}
       className="w-[calc(100%-20px)]"
       value={selected}
+      defaultActiveFirstOption
       options={list.map((e) => ({
         label: (
           <span>

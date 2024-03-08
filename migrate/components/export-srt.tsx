@@ -1,13 +1,16 @@
 import { Button, Form, Input, Modal } from "antd";
 import ExportSRT from "../helpers/build-srt";
 import { PrimaryListItem } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classname from "classnames";
 import { useToggle } from "react-use";
 import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 
-export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
+export default function exportSRT({ state, defaultName }: { state: PrimaryListItem[], defaultName: string }) {
   const [name, setName] = useState("");
+  useEffect(() => {
+    setName(defaultName)
+  },[])
   const [link, setLink] = useState("");
   const [open, toggle] = useToggle(false);
   const [isSRT, setIsSRT] = useState(false);
@@ -41,7 +44,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
             <Form.Item label=".SRT اسم ملف">
               <Input
                 required
-                value={name}
+                value={name || defaultName}
                 onChange={(e) => setName(e.target.value)}
               />
             </Form.Item>
@@ -62,7 +65,7 @@ export default function exportSRT({ state }: { state: PrimaryListItem[] }) {
               download={`${name}.srt`}
               href={link}
             >
-              {!name ? "اخدل اسماََ للملف:" : `${name}`}.srt
+              {!name ? defaultName : `${name}`}.srt
             </Button>
           )}
         </div>

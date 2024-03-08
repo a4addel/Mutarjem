@@ -3,6 +3,7 @@ import Magic from "../../migrate/pages/magic";
 import LandingScreen from "../screens/landing";
 import Page from "../../migrate/pages";
 import Choose from "../screens/choose";
+import Settings from "../screens/settings";
 
 export const router = createBrowserRouter([
   {
@@ -20,5 +21,9 @@ export const router = createBrowserRouter([
   {
     path: "/choose",
     element: <Choose />,
+  },
+  {
+    path: "/settings",
+    element: <Settings />,
   },
 ]);
