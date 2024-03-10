@@ -139,7 +139,7 @@ function EditProjectName({
           },
           {
             label: "LTR",
-            value: "rtl"
+            value: "ltr"
           }
         ]} className="w-full"  value={dir} onSelect={(e) => setDir(e)} />
          <Button
