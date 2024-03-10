@@ -3,15 +3,17 @@ import { v4 } from "uuid";
 export default async function createProject({
   projectName,
   text,
+  dir
 }: {
   projectName: string;
   text: string;
+  dir: string
 }): Promise<false | string> {
   try {
     const id = v4();
 
     await createDir(`Motarjem/projects/${id}`, { dir: BaseDirectory.Home });
-    await writeFile(`Motarjem/projects/${id}/meta.text`, projectName, {
+    await writeFile(`Motarjem/projects/${id}/meta.text`, `${projectName}\n${dir}`, {
       dir: BaseDirectory.Home,
     });
     await writeFile(`Motarjem/projects/${id}/memo.text`, "0", {

@@ -19,58 +19,47 @@ import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { Card, Flex } from "antd";
 
 const Page: React.FC = () => {
- 
+
   let { id } = useParams();
 
   const [rows, setRows] = useState<Array<PrimaryListItem>>();
   const [name, setName] = useState<string>("");
+  const [dir, setDir] = useState<string>("ltr");
 
   React.useEffect(() => {
-    // setRows([
-    //   //@ts-ignore
-    //   ...DeepL_JOSN_To_State_Format(DallEData.json),
-    //   //@ts-ignore
-    //   ...DeepL_JOSN_To_State_Format(DallEData.json),
-    //   //@ts-ignore
-    //   ...DeepL_JOSN_To_State_Format(DallEData.json),
-    //   //@ts-ignore
-    //   ...DeepL_JOSN_To_State_Format(DallEData.json),
-    // ]);
     readTextFile(`Motarjem/projects/${id}/meta.text`, {
       dir: BaseDirectory.Home,
     })
-      .then((e) => {        
+      .then((e) => {
         setName(e.split("\n")[0] || "");
+        setDir(e.split("\n")[1] || "");
       })
-      .catch(() => {})
-      .finally(() => {});
-      
+      .catch(() => { })
+      .finally(() => { });
+
     readTextFile(`Motarjem/projects/${id}/text.text`, {
       dir: BaseDirectory.Home,
     })
       .then((e) => {
         setRows(JSON.parse(e));
       })
-      .catch(() => {})
-      .finally(() => {});
+      .catch(() => { })
+      .finally(() => { });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(rows));
-  }, [rows]);
 
-   const red = useRef<HTMLDivElement>(null);
- 
+
+  const red = useRef<HTMLDivElement>(null);
+
   return (
     <LayoutScreen>
-      <ExportSRTComp state={rows || []} defaultName={name}/>
+      <ExportSRTComp state={rows || []} defaultName={name} />
 
       <div className={classnames("max-w-7xl", "mx-auto", "w-full")} ref={red}>
         <Virtuoso
           useWindowScroll
           autoFocus
           className={classnames(
-            "max-w-6xl",
             "gap-3",
             "flex",
             "flex-col",
@@ -99,37 +88,34 @@ const Page: React.FC = () => {
 
             return (
               <Card
-                title={data.title}
                 id={`${index + 1}-item`}
                 key={index}
                 className={classnames(
                   "flex",
                   "flex-col",
-                  "my-5",
+                  "m-5",
                   "block",
-                 )}
+                )}
+
               >
-                <Flex className={classnames("flex", "flex-col", "w-full")}>
-                  <div
-                    className={classnames(
-                      "bg-sky-500",
-                      "p-2",
-                      "w-full",
-                      "text-center",
-                      "w-[calc(100%-20px)]",
-                    )}
-                  >
-                    {data.data.map((e) =>
-                      e.type === "aya" ? (
-                        <span className="font-yellow gray">
-                          {" "}
-                          {e.data.selected}{" "}
-                        </span>
-                      ) : (
-                        e.data || e.initialData
-                      ),
-                    )}
-                  </div>
+                <div className="text-3xl text-center m-3" dir={dir}>
+                  <p className="w-ful text-center ">{(index + 1).toString().padStart(rows?.length.toString().length || 0, "0")}</p>
+                  {data.data.map((e) =>
+                    e.type === "aya" ? (
+                      <span className="font-yellow gray" style={{
+                        color: e.data.selected == "Select Translation" ? "red" : "yellowgreen"
+                      }}>
+                        <b><i> {" "}
+                          {e.data.selected}
+                          {" "}</i></b>
+                      </span>
+                    ) : (
+                      e.data || e.initialData
+                    ),
+                  )}
+                </div>
+                <Flex className={classnames("flex", "flex-col", "w-full", dir)}>
+
 
                   {(data?.data || []).map((e, i) => {
                     if (e.type === "aya")
@@ -150,10 +136,12 @@ const Page: React.FC = () => {
                           list={e.data.options}
                           id={data.id}
                           key={i}
+
                         />
                       );
                     return (
                       <TextComponent
+                        direction={dir}
                         value={e.data || e.initialData}
                         onChange={async (value) => {
                           const new_rows = handleText(

@@ -12,7 +12,7 @@ function LandingScreen(ss: any) {
           </Button>
         </Link>
       </span>
-      <Flex className="px-20 w-full max-w-6xl">{ss.children}</Flex>
+      <>{ss.children}</>
     </>
   );
 }

@@ -43,7 +43,7 @@ export default function Home() {
     const id = await createProject({
       projectName: data.project_name,
       // @ts-ignore
-      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)),
+      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)),dir: data.dir
     });
     if (id) {
       n(`/magic/${id}`);
@@ -57,6 +57,7 @@ export default function Home() {
           validationSchema={schema}
           initialValues={{
             project_name: "",
+            dir: "",
             input_lang: "",
             language: "",
             file: "",
@@ -77,6 +78,23 @@ export default function Home() {
                         onChange={(e) =>
                           form.setFieldValue(field.name, e.target.value)
                         }
+                      />
+                    )}
+                  </Field>
+                </Form.Item>
+
+                <Form.Item label="جهة النص" required>
+                  <Field name="dir">
+                    {({ field }: FieldProps) => (
+                      <Select
+                        
+                        className={classnames("flex-grow", "flex-shrink-0")}
+                        onSelect={(e) =>
+                          form.setFieldValue(field.name, e)
+                        }
+                        allowClear
+
+                        options={[{label: "LTR", value: "ltr"}, {label: "RTL", value: "rtl"}]}
                       />
                     )}
                   </Field>
@@ -208,4 +226,5 @@ const schema = yup.object().shape({
     .array()
     .of(yup.string())
     .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
+    dir:yup.string().oneOf(["rtl", "ltr"])
 });

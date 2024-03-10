@@ -26,9 +26,11 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
   index,
   selected,
   onSelect,
+  ...rest
 }) => {
   return (
     <Select
+    {...rest}
       placeholder={`-- Select Translation --`}
       onChange={(e) => {
         onSelect({
@@ -37,8 +39,8 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
           value: e,
         });
       }}
-      className="w-[calc(100%-20px)]"
-      value={selected}
+      className="w-[calc(100%-20px)] text-center shadow-lg"
+      value={selected ? selected: (list.length > 0 ? list[0].text: "")}
       defaultActiveFirstOption
       options={list.map((e) => ({
         label: (

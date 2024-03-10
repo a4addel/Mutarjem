@@ -5,7 +5,7 @@ import {
   readTextFile,
 } from "@tauri-apps/api/fs";
 import { useEffect, useState } from "react";
-import { Button, Input, Modal, Table } from "antd";
+import { Button, Input, Modal, Select, Table } from "antd";
 import { Link } from "react-router-dom";
 import { useToggle } from "react-use";
 
@@ -119,6 +119,8 @@ function EditProjectName({
 }) {
   const [open, toogle] = useToggle(false);
   const [name, setName] = useState(curruntName);
+  const [dir, setDir] = useState("");
+  
   return (
     <>
       <Button className="block  " onClick={() => toogle(true)}>
@@ -129,12 +131,23 @@ function EditProjectName({
         onCancel={toogle}
         okButtonProps={{ style: { display: "none" } }}
       >
-        <Input value={name} onChange={(e) => setName(e.target.value)} />
-        <Button
+        <Input.TextArea value={name} onChange={(e) => setName(e.target.value)} />
+        <Select options={[
+          {
+            label: "RTL",
+             value: "rtl"
+          },
+          {
+            label: "LTR",
+            value: "rtl"
+          }
+        ]} className="w-full"  value={dir} onSelect={(e) => setDir(e)} />
+         <Button
           onClick={async () => {
             await edit_project_name({
               projectID: projectID,
               projectName: name,
+              dir: dir
             });
             window.location.reload();
           }}

@@ -7,13 +7,11 @@ type TextComponentProps = {
   onChange: (value: string) => void;
 };
 
-const TextComponent: React.FC<TextComponentProps> = ({
+const TextComponent = ({
   value,
   onChange,
-}: {
-  value: string;
-  onChange: Function;
-}) => {
+  direction
+}:  TextComponentProps &  {direction: string}) => {
   const [v, setValue] = useState("");
 
   React.useEffect(() => {
@@ -22,14 +20,21 @@ const TextComponent: React.FC<TextComponentProps> = ({
 
   return (
     <Input.TextArea
-      autoSize
+       autoSize
+       dir={direction}
       className={classnames(
         "max-w-full",
         "text-left",
         "shadow-xl",
         "my-2",
         "w-[calc(100%-20px)]",
+        "text-center",
+        "bold",
+        
       )}
+      style={{
+        direction: `${direction}!important` as any
+      }}
       value={v}
       size="large"
       onChange={(event) => setValue(event.target.value)}
