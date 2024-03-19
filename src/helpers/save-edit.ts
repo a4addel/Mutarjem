@@ -1,4 +1,5 @@
 import { BaseDirectory, writeFile } from "@tauri-apps/api/fs";
+import { ProjectTextPath } from "../consts";
 
 export default async function saveProject({
   projectID,
@@ -10,7 +11,7 @@ export default async function saveProject({
   itemCount: string;
 }): Promise<boolean> {
   try {
-    await writeFile(`Motarjem/projects/${projectID}/text.text`, text, {
+    await writeFile(await ProjectTextPath(projectID), text, {
       dir: BaseDirectory.Home,
     });
     await writeFile(

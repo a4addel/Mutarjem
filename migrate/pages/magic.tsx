@@ -17,6 +17,7 @@ import saveProject from "../../src/helpers/save-edit";
 import { useParams } from "react-router-dom";
 import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { Card, Flex } from "antd";
+import { ProjectMetaPath, ProjectTextPath } from "../../src/consts";
 
 const Page: React.FC = () => {
 
@@ -27,24 +28,27 @@ const Page: React.FC = () => {
   const [dir, setDir] = useState<string>("ltr");
 
   React.useEffect(() => {
-    readTextFile(`Motarjem/projects/${id}/meta.text`, {
-      dir: BaseDirectory.Home,
-    })
-      .then((e) => {
-        setName(e.split("\n")[0] || "");
-        setDir(e.split("\n")[1] || "");
+    async function main() {
+      readTextFile(await ProjectMetaPath(id || ""), {
+        dir: BaseDirectory.Home,
       })
-      .catch(() => { })
-      .finally(() => { });
-
-    readTextFile(`Motarjem/projects/${id}/text.text`, {
-      dir: BaseDirectory.Home,
-    })
-      .then((e) => {
-        setRows(JSON.parse(e));
+        .then((e) => {
+          setName(e.split("\n")[0] || "");
+          setDir(e.split("\n")[1] || "");
+        })
+        .catch(() => { })
+        .finally(() => { });
+  
+      readTextFile(await ProjectTextPath(id || ""), {
+        dir: BaseDirectory.Home,
       })
-      .catch(() => { })
-      .finally(() => { });
+        .then((e) => {
+          setRows(JSON.parse(e));
+        })
+        .catch(() => { })
+        .finally(() => { });
+    }
+    main();
   }, []);
 
 
@@ -70,6 +74,7 @@ const Page: React.FC = () => {
             "h-screen",
             "w-full",
             "p-[17px]",
+            "py-[200px]"
           )}
           data={rows}
           style={{

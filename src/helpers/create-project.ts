@@ -1,5 +1,6 @@
 import { BaseDirectory, createDir, writeFile } from "@tauri-apps/api/fs";
 import { v4 } from "uuid";
+import { ProjectMetaPath, ProjectPath, ProjectTextPath } from "../consts";
 export default async function createProject({
   projectName,
   text,
@@ -12,14 +13,14 @@ export default async function createProject({
   try {
     const id = v4();
 
-    await createDir(`Motarjem/projects/${id}`, { dir: BaseDirectory.Home });
-    await writeFile(`Motarjem/projects/${id}/meta.text`, `${projectName}\n${dir}`, {
+    await createDir(await ProjectPath(id), { dir: BaseDirectory.Home });
+    await writeFile(await ProjectMetaPath(id || ""), `${projectName}\n${dir}`, {
       dir: BaseDirectory.Home,
     });
     await writeFile(`Motarjem/projects/${id}/memo.text`, "0", {
       dir: BaseDirectory.Home,
     });
-    await writeFile(`Motarjem/projects/${id}/text.text`, text, {
+    await writeFile(await ProjectTextPath(id || ""), text, {
       dir: BaseDirectory.Home,
     });
     return id;
@@ -27,3 +28,4 @@ export default async function createProject({
     return false;
   }
 }
+

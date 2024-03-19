@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 
 function LandingScreen(ss: any) {
   return (
-    <>
-      <span className="fixed">
+    <div className="w-full max-w-7xl mx-auto">
+      <span className="fixed z-[99999999999]">
         <Link to={"/"}>
-          <Button>
+          <Button className="">
             <HomeFilled />
           </Button>
         </Link>
       </span>
-      <>{ss.children}</>
-    </>
+      {ss.children}
+    </div>
   );
 }
 

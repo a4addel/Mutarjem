@@ -39,7 +39,7 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
           value: e,
         });
       }}
-      className="w-[calc(100%-20px)] text-center shadow-lg"
+      className="w-[calc(100%-20px)] text-center shadow-lg font-bold"
       value={selected ? selected: (list.length > 0 ? list[0].text: "")}
       defaultActiveFirstOption
       options={list.map((e) => ({

@@ -13,6 +13,7 @@ import deleteProject from "../helpers/delete-project";
 import edit_project_name from "../helpers/edit-project-name";
 
 import Layout from "./layout";
+import { ProjectMetaPath } from "../consts";
 
 async function getProjects() {
   try {
@@ -32,7 +33,7 @@ async function getNames(): Promise<Project[]> {
   let sss: Project[] = [];
   for await (let item of s) {
     const name = await readTextFile(
-      `Motarjem/projects/${item.name}/meta.text`,
+      await ProjectMetaPath(item.name || ""),
       { dir: BaseDirectory.Home },
     );
     if (!name) continue;
@@ -56,7 +57,7 @@ export default function Choose() {
     main();
   }, []);
   return (
-    <Layout>
+     <Layout >
       <Table dataSource={s} className="w-full">
         <Table.Column
           render={(e) => {
@@ -79,7 +80,7 @@ export default function Choose() {
         ></Table.Column>
       </Table>
     </Layout>
-  );
+   );
 }
 
 function DeleteProject({ projectID }: { projectID: string }) {
@@ -118,11 +119,12 @@ function EditProjectName({
   curruntName: string;
 }) {
   const [open, toogle] = useToggle(false);
-  const [name, setName] = useState(curruntName);
+  const [name, setName] = useState(() => curruntName);
   const [dir, setDir] = useState("");
-  
+
   return (
     <>
+    
       <Button className="block  " onClick={() => toogle(true)}>
         تعديل
       </Button>
@@ -135,14 +137,14 @@ function EditProjectName({
         <Select options={[
           {
             label: "RTL",
-             value: "rtl"
+            value: "rtl"
           },
           {
             label: "LTR",
             value: "ltr"
           }
-        ]} className="w-full"  value={dir} onSelect={(e) => setDir(e)} />
-         <Button
+        ]} className="w-full" value={dir} onSelect={(e) => setDir(e)} />
+        <Button
           onClick={async () => {
             await edit_project_name({
               projectID: projectID,

@@ -68,7 +68,9 @@ export default function Home() {
           {(form) => {
             return (
               <AntForm className={classnames("flex", "flex-col", "gap-1")}>
-                {JSON.stringify(form.values, null, 2)}
+                <p className="text-center !text-4xl p-2 m-2 font-bold">
+                    أدخل بيانات المشروع
+                </p>
                 <Form.Item label="إسم المشروع" required>
                   <Field name="project_name">
                     {({ field }: FieldProps) => (

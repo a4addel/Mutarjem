@@ -30,6 +30,7 @@ const TextComponent = ({
         "w-[calc(100%-20px)]",
         "text-center",
         "bold",
+        "font-bold"
         
       )}
       style={{
