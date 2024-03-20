@@ -3,7 +3,7 @@ import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Mutarjem, listProjectsPath } f
 
 export default async function setLink(link = "") {
     try {
-        await createDir(Motarjem, { dir: BaseDirectory.Home, recursive: true });
+        await createDir(Mutarjem, { dir: BaseDirectory.Home, recursive: true });
         // create folder Motarjem/projects
         await createDir(await listProjectsPath(), { dir: BaseDirectory.Home, recursive: true });
         // create folder Motarjem/auth
