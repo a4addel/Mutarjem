@@ -4,7 +4,7 @@ import { createDir, BaseDirectory, writeFile } from "@tauri-apps/api/fs";
 import {  listen } from "@tauri-apps/api/event";
 
 import { useEffect, useState } from "react";
-import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Motarjem, listProjectsPath } from "./consts";
+import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Mutarjem, listProjectsPath } from "./consts";
 import { Spin } from "antd";
 
 
@@ -22,15 +22,15 @@ function App() {
   useEffect(() => {
     async function main() {
       setSetUp(true)
-      // create folder Motarjem
-      await createDir(Motarjem, { dir: BaseDirectory.Home, recursive: true });
-      // create folder Motarjem/projects
+      // create folder Mutarjem
+      await createDir(Mutarjem, { dir: BaseDirectory.Home, recursive: true });
+      // create folder Mutarjem/projects
       await createDir(await listProjectsPath(), { dir: BaseDirectory.Home, recursive: true });
-      // create folder Motarjem/auth
+      // create folder Mutarjem/auth
       await createDir(await AUTHPath(), { dir: BaseDirectory.Home, recursive: true })
-      // create file Motarjem/auth/Link.text
+      // create file Mutarjem/auth/Link.text
       await writeFile(await AUTHL_LinkPath(), "", { dir: BaseDirectory.Home, append: true });
-      // create file Motarjem/auth/key.text
+      // create file Mutarjem/auth/key.text
       await writeFile(await AUTHL_KeyPath(), "", { dir: BaseDirectory.Home, append: true });
       setTimeout(() => setSetUp(false), 600)
 

@@ -17,7 +17,7 @@ import { ProjectMetaPath } from "../consts";
 
 async function getProjects() {
   try {
-    const s = await readDir("Motarjem/projects", { dir: BaseDirectory.Home });
+    const s = await readDir("Mutarjem/projects", { dir: BaseDirectory.Home });
     return s;
   } catch (error) {
     return [] as FileEntry[];

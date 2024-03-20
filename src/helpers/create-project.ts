@@ -17,7 +17,7 @@ export default async function createProject({
     await writeFile(await ProjectMetaPath(id || ""), `${projectName}\n${dir}`, {
       dir: BaseDirectory.Home,
     });
-    await writeFile(`Motarjem/projects/${id}/memo.text`, "0", {
+    await writeFile(`Mutarjem/projects/${id}/memo.text`, "0", {
       dir: BaseDirectory.Home,
     });
     await writeFile(await ProjectTextPath(id || ""), text, {

@@ -15,7 +15,7 @@ export default async function saveProject({
       dir: BaseDirectory.Home,
     });
     await writeFile(
-      `Motarjem/projects/${projectID}/memo.text`,
+      `Mutarjem/projects/${projectID}/memo.text`,
       itemCount.toString(),
       { dir: BaseDirectory.Home },
     );

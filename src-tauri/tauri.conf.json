@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Motarjem",
+    "productName": "Mutarjem",
     "version": "0.0.0"
   },
   "tauri": {

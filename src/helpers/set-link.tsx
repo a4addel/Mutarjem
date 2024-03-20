@@ -1,5 +1,5 @@
 import { BaseDirectory, createDir, writeFile, writeTextFile, removeFile } from "@tauri-apps/api/fs";
-import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Motarjem, listProjectsPath } from "../consts";
+import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Mutarjem, listProjectsPath } from "../consts";
 
 export default async function setLink(link = "") {
     try {
