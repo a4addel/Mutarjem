@@ -50,7 +50,7 @@ export default function exportSRT({ state, defaultName }: { state: PrimaryListIt
             </Form.Item>
             <Button
               onClick={() => {
-                setLink(ExportSRT(state));
+                setLink(ExportSRT(state, defaultName));
                 setIsSRT(true);
               }}
             >

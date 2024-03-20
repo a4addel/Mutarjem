@@ -1,26 +1,52 @@
 import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
 import { createDir, BaseDirectory, writeFile } from "@tauri-apps/api/fs";
-import { useEffect } from "react";
+import {  listen } from "@tauri-apps/api/event";
+
+import { useEffect, useState } from "react";
+import { AUTHL_KeyPath, AUTHL_LinkPath, AUTHPath, Motarjem, listProjectsPath } from "./consts";
+import { Spin } from "antd";
+
+
+
+
+const Loading = () => (
+  <div className="  w-screen h-screen flex justify-center item-center flex-col">
+    <Spin />
+    <p className="text-5xl text-center">  انتظر لحظات</p>
+  </div>
+)
 
 function App() {
+  const [setup, setSetUp] = useState(true);
   useEffect(() => {
-    createDir("Motarjem/", { dir: BaseDirectory.Home })
-      .then(() => {
-        createDir("Motarjem/projects", { dir: BaseDirectory.Home }).catch(
-          () => {},
-        );
-        createDir("Motarjem/config", { dir: BaseDirectory.Home }).catch(
-          () => {},
-        );
-        writeFile("Motarjem/config/default-path.text", "", {
-          dir: BaseDirectory.Home,
-        }).catch(() => {});
-      })
-      .catch(() => {});
+    async function main() {
+      setSetUp(true)
+      // create folder Motarjem
+      await createDir(Motarjem, { dir: BaseDirectory.Home, recursive: true });
+      // create folder Motarjem/projects
+      await createDir(await listProjectsPath(), { dir: BaseDirectory.Home, recursive: true });
+      // create folder Motarjem/auth
+      await createDir(await AUTHPath(), { dir: BaseDirectory.Home, recursive: true })
+      // create file Motarjem/auth/Link.text
+      await writeFile(await AUTHL_LinkPath(), "", { dir: BaseDirectory.Home, append: true });
+      // create file Motarjem/auth/key.text
+      await writeFile(await AUTHL_KeyPath(), "", { dir: BaseDirectory.Home, append: true });
+      setTimeout(() => setSetUp(false), 600)
+
+    }
+    main();
   }, []);
 
-  return <RouterProvider router={router} />;
+
+  return <>
+    {
+      setup && <Loading />
+    }
+    {
+      !setup && <RouterProvider router={router} />
+    }
+  </>
 }
 
 export default App;
