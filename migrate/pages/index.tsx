@@ -12,6 +12,7 @@ import DallEData from "../data/data.json";
 import LayoutScreen from "../../src/screens/layout";
 import createProject from "../../src/helpers/create-project";
 import { useEffect, useState } from "react";
+import { LoadingOutlined } from "@ant-design/icons";
 type Translations = {
   identifier: string;
   language: string;
@@ -43,7 +44,7 @@ export default function Home() {
     const id = await createProject({
       projectName: data.project_name,
       // @ts-ignore
-      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)),dir: data.dir
+      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)), dir: data.dir
     });
     if (id) {
       n(`/magic/${id}`);
@@ -69,7 +70,7 @@ export default function Home() {
             return (
               <AntForm className={classnames("flex", "flex-col", "gap-1")}>
                 <p className="text-center !text-4xl p-2 m-2 font-bold">
-                    أدخل بيانات المشروع
+                  أدخل بيانات المشروع
                 </p>
                 <Form.Item label="إسم المشروع" required>
                   <Field name="project_name">
@@ -89,14 +90,14 @@ export default function Home() {
                   <Field name="dir">
                     {({ field }: FieldProps) => (
                       <Select
-                        
+
                         className={classnames("flex-grow", "flex-shrink-0")}
                         onSelect={(e) =>
                           form.setFieldValue(field.name, e)
                         }
                         allowClear
 
-                        options={[{label: "LTR", value: "ltr"}, {label: "RTL", value: "rtl"}]}
+                        options={[{ label: "LTR", value: "ltr" }, { label: "RTL", value: "rtl" }]}
                       />
                     )}
                   </Field>
@@ -164,11 +165,18 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-                <Form.Item label="قواميس القران" required>
+
+                <Form.Item label="قواميس القران" required className="realtive">
+                  <div style={{
+                    display: loading ? "flex" : "none"
+                  }} className="absolute z-50 w-full h-full bg-slate-300 flex justify-center items-center" >
+                    <LoadingOutlined />
+                  </div>
+                  
                   <Field name="qc_edition">
                     {({ field, form }: FieldProps) => (
                       <Select
-                        loading={loading}
+
                         value={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
                         onChange={(e) => form.setFieldValue(field.name, e)}
@@ -228,5 +236,5 @@ const schema = yup.object().shape({
     .array()
     .of(yup.string())
     .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
-    dir:yup.string().oneOf(["rtl", "ltr"])
+  dir: yup.string().oneOf(["rtl", "ltr"])
 });
