@@ -9,11 +9,13 @@ export default function extractStateFromDallEArray(
   a: Item[],
 ): PrimaryListItem[] {
   return a.map((e) => buildPrimartItem(e));
-}
+};
+
 
 function buildPrimartItem(a: Item): PrimaryListItem {
   const { translate, section_time } = a;
   const parsedTranslation = parseTranslation(translate);
+
   const ayas = Prepare_Edition_ayas(a);
 
   const data = parsedTranslation.contentArray.map((e) => {

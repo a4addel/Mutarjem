@@ -19,6 +19,7 @@ import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { Card, Flex } from "antd";
 import { ProjectMetaPath, ProjectTextPath } from "../../src/consts";
 
+
 const Page: React.FC = () => {
 
   let { id } = useParams();
