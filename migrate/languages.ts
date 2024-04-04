@@ -2,11 +2,11 @@ const langs = [
   {
     value: "EN",
     key: "EN",
-    label: "English",
+    label: "الإنجليزية",
     disabled: false,
   },
   {
-    label: "GERMANY",
+    label: "الألمانية",
     value: "DE",
     key: "DE",
     disabled: false,
@@ -14,7 +14,31 @@ const langs = [
   {
     value: "FR",
     key: "FR",
-    label: "FRENCH",
+    label: "الفرنسية",
+    disabled: false,
+  },
+  {
+    value: "TR",
+    key: "TR",
+    label: "التركية",
+    disabled: false,
+  },
+  {
+    value: "AR",
+    key: "AR",
+    label: "العربية",
+    disabled: false,
+  },
+  {
+    value: "ES",
+    key: "ES",
+    label: "الإسبانية",
+    disabled: false,
+  },
+  {
+    value: "SV",
+    key: "SV",
+    label: "السويدية",
     disabled: false,
   },
 ];

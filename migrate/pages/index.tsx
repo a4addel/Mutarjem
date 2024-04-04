@@ -1,5 +1,5 @@
 import { Form as AntForm, Select, Input, Button, Form, Flex } from "antd";
-import { ErrorMessage, Field, FieldProps, Formik } from "formik";
+import { ErrorMessage, Field, FieldProps, Formik, FormikHandlers, FormikHelpers } from "formik";
 import * as yup from "yup";
 import classnames from "classnames";
 import { useToggle } from "react-use";
@@ -13,6 +13,7 @@ import LayoutScreen from "../../src/screens/layout";
 import createProject from "../../src/helpers/create-project";
 import { useEffect, useState } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
+import { log } from "console";
 type Translations = {
   identifier: string;
   language: string;
@@ -40,14 +41,26 @@ export default function Home() {
     value: e.identifier,
   }));
 
-  const onSubmit = async (data: yup.InferType<typeof schema>) => {
+  const onSubmit = async (data: yup.InferType<typeof schema>,  formikHelpers: FormikHelpers<{
+    project_name: string;
+    dir: string;
+    input_lang: string;
+    language: string;
+    file: string;
+    qc_edition: never[];
+}>) => {
+  // @ts-ignore
+  if (data.file?.type !== "text/plain") {
+    formikHelpers.setErrors({file: "File should be plain text"})
+    return;
+  }
     const id = await createProject({
       projectName: data.project_name,
       // @ts-ignore
       text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)), dir: data.dir
     });
     if (id) {
-      n(`/magic/${id}`);
+      // n(`/magic/${id}`);
     }
   };
 
@@ -220,17 +233,17 @@ export default function Home() {
     </LayoutScreen>
   );
 }
-
+const allowedLangs = Languages.map((e) => e.key);
 const schema = yup.object().shape({
   project_name: yup.string().required("ادخل اسماَ للمشروع"),
-  input_lang: yup.string().required("اختر لغة المصدر"),
+  input_lang: yup.string().required("اختر لغة المصدر").oneOf(allowedLangs),
   language: yup
     .string()
     .required("اختر اللغة الهدف")
     .notOneOf(
       [yup.ref("input_lang")],
       `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`,
-    ),
+    ).oneOf(allowedLangs),
   file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
   qc_edition: yup
     .array()
