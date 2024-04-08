@@ -60,7 +60,7 @@ export default function Home() {
       text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)), dir: data.dir
     });
     if (id) {
-      // n(`/magic/${id}`);
+      n(`/magic/${id}`);
     }
   };
 
