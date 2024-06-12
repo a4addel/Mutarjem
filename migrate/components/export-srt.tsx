@@ -7,7 +7,7 @@ import { useToggle } from "react-use";
 import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 
 export default function exportSRT({ state, defaultName }: { state: PrimaryListItem[], defaultName: string }) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(defaultName);
   useEffect(() => {
     setName(defaultName)
   },[])

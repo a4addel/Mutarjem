@@ -49,9 +49,11 @@ export default function Home() {
     file: string;
     qc_edition: never[];
 }>) => {
+  console.log(data.file);
+  
   // @ts-ignore
-  if (data.file?.type !== "text/plain") {
-    formikHelpers.setErrors({file: "File should be plain text"})
+  if (!(data.file?.name + "").endsWith(".srt")) {
+    formikHelpers.setErrors({file: "File should '.srt'"})
     return;
   }
     const id = await createProject({
