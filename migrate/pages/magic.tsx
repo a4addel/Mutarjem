@@ -6,12 +6,7 @@ import AyaComponent from "../components/ayah";
 import handleModalSelect from "../helpers/handle-modal-select";
 import handleText from "../helpers/handle-text-change";
 import { PrimaryListItem } from "../types";
-
-// import DeepL_JOSN_To_State_Format from "../helpers/DeepL_JOSN_To_State_Format";
-// import DallEData from "../data/data.json";
-
 import ExportSRTComp from "../components/export-srt";
-
 import LayoutScreen from "../../src/screens/layout";
 import saveProject from "../../src/helpers/save-edit";
 import { useParams } from "react-router-dom";
@@ -19,9 +14,7 @@ import { BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { Card, Flex } from "antd";
 import { ProjectMetaPath, ProjectTextPath } from "../../src/consts";
 
-
 const Page: React.FC = () => {
-
   let { id } = useParams();
 
   const [rows, setRows] = useState<Array<PrimaryListItem>>();
@@ -52,8 +45,6 @@ const Page: React.FC = () => {
     main();
   }, []);
 
-
-
   const red = useRef<HTMLDivElement>(null);
 
   return (
@@ -72,23 +63,21 @@ const Page: React.FC = () => {
             "overflow-x-hidden",
             "mx-auto",
             "block",
-            "h-screen",
             "w-full",
-            "p-[17px]",
             "py-[200px]"
           )}
           data={rows}
           style={{
             margin: "0",
-            height: "clac(100vh - 200px)",
+            height: "calc(100vh - 200px)", // Fixed typo in 'calc'
             width: "100%",
             marginBlock: "0 auto",
             padding: "10px 0",
             scrollSnapType: "y",
-            overflow: "hidden",
+            overflow: "auto", // Changed from 'hidden' to 'auto'
           }}
           totalCount={rows?.length ?? 0}
-          controls
+          overscan={200} // Added overscan to preload more items
           itemContent={(index, data) => {
             if (!data) return <></>;
 
@@ -102,10 +91,9 @@ const Page: React.FC = () => {
                   "m-5",
                   "block",
                 )}
-
               >
                 <div className="text-3xl text-center m-3" dir={dir}>
-                  <p className="w-ful text-center ">{(index + 1).toString().padStart(rows?.length.toString().length || 0, "0")}</p>
+                  <p className="w-full text-center ">{(index + 1).toString().padStart(rows?.length.toString().length || 0, "0")}</p>
                   {data.data.map((e) =>
                     e.type === "aya" ? (
                       <span className="font-yellow gray" style={{
@@ -121,8 +109,6 @@ const Page: React.FC = () => {
                   )}
                 </div>
                 <Flex className={classnames("flex", "flex-col", "w-full", dir)}>
-
-
                   {(data?.data || []).map((e, i) => {
                     if (e.type === "aya")
                       return (
@@ -142,7 +128,6 @@ const Page: React.FC = () => {
                           list={e.data.options}
                           id={data.id}
                           key={i}
-
                         />
                       );
                     return (
