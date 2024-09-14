@@ -54,6 +54,11 @@ jobs:
       - name: install pnpm
         run: npm i -g pnpm
 
+
+      - name: install
+        run: pnpm install
+
+
       - name: build
         run: pnpm tauri build
 
