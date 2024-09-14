@@ -1,4 +1,4 @@
-import { HomeFilled } from "@ant-design/icons";
+import HomeFilled from "@ant-design/icons/HomeFilled";
 import { Button, Flex } from "antd";
 import { Link } from "react-router-dom";
 
@@ -7,9 +7,7 @@ function LandingScreen(ss: any) {
     <div className="w-full max-w-7xl mx-auto">
       <span className="fixed z-[99999999999]">
         <Link to={"/"}>
-          <Button className="">
-            <HomeFilled />
-          </Button>
+          <Button className="">الرئيسية</Button>
         </Link>
       </span>
       {ss.children}

@@ -30,17 +30,17 @@ const Page: React.FC = () => {
           setName(e.split("\n")[0] || "");
           setDir(e.split("\n")[1] || "");
         })
-        .catch(() => { })
-        .finally(() => { });
-  
+        .catch(() => {})
+        .finally(() => {});
+
       readTextFile(await ProjectTextPath(id || ""), {
         dir: BaseDirectory.Home,
       })
         .then((e) => {
           setRows(JSON.parse(e));
         })
-        .catch(() => { })
-        .finally(() => { });
+        .catch(() => {})
+        .finally(() => {});
     }
     main();
   }, []);
@@ -64,7 +64,7 @@ const Page: React.FC = () => {
             "mx-auto",
             "block",
             "w-full",
-            "py-[200px]"
+            "py-[200px]",
           )}
           data={rows}
           style={{
@@ -85,23 +85,28 @@ const Page: React.FC = () => {
               <Card
                 id={`${index + 1}-item`}
                 key={index}
-                className={classnames(
-                  "flex",
-                  "flex-col",
-                  "m-5",
-                  "block",
-                )}
+                className={classnames("flex", "flex-col", "m-5", "block")}
               >
                 <div className="text-3xl text-center m-3" dir={dir}>
-                  <p className="w-full text-center ">{(index + 1).toString().padStart(rows?.length.toString().length || 0, "0")}</p>
+                  <p className="w-full text-center ">
+                    {(index + 1)
+                      .toString()
+                      .padStart(rows?.length.toString().length || 0, "0")}
+                  </p>
                   {data.data.map((e) =>
                     e.type === "aya" ? (
-                      <span className="font-yellow gray" style={{
-                        color: e.data.selected == "Select Translation" ? "red" : "yellowgreen"
-                      }}>
-                        <b><i> {" "}
-                          {e.data.selected}
-                          {" "}</i></b>
+                      <span
+                        className="font-yellow gray"
+                        style={{
+                          color:
+                            e.data.selected == "Select Translation"
+                              ? "red"
+                              : "yellowgreen",
+                        }}
+                      >
+                        <b>
+                          <i> {e.data.selected} </i>
+                        </b>
                       </span>
                     ) : (
                       e.data || e.initialData

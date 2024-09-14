@@ -32,10 +32,9 @@ async function getNames(): Promise<Project[]> {
   const s = await getProjects();
   let sss: Project[] = [];
   for await (let item of s) {
-    const name = await readTextFile(
-      await ProjectMetaPath(item.name || ""),
-      { dir: BaseDirectory.Home },
-    );
+    const name = await readTextFile(await ProjectMetaPath(item.name || ""), {
+      dir: BaseDirectory.Home,
+    });
     if (!name) continue;
 
     sss.push({
@@ -57,10 +56,10 @@ export default function Choose() {
     main();
   }, []);
   return (
-     <Layout >
+    <Layout>
       <Table dataSource={s} className="w-full">
         <Table.Column
-          render={(e) => {
+          render={(e: Project) => {
             return (
               <Link className="w-1/2 block underline" to={`/magic/${e.id}`}>
                 <span className="block w-full truncate">{e.name}</span>
@@ -69,18 +68,18 @@ export default function Choose() {
           }}
         ></Table.Column>
         <Table.Column
-          render={(e) => {
+          render={(e: Project) => {
             return <EditProjectName curruntName={e.name} projectID={e.id} />;
           }}
         ></Table.Column>
         <Table.Column
-          render={(e) => {
+          render={(e: Project) => {
             return <DeleteProject projectID={e.id} />;
           }}
         ></Table.Column>
       </Table>
     </Layout>
-   );
+  );
 }
 
 function DeleteProject({ projectID }: { projectID: string }) {
@@ -124,7 +123,6 @@ function EditProjectName({
 
   return (
     <>
-    
       <Button className="block  " onClick={() => toogle(true)}>
         تعديل
       </Button>
@@ -133,23 +131,33 @@ function EditProjectName({
         onCancel={toogle}
         okButtonProps={{ style: { display: "none" } }}
       >
-        <Input.TextArea value={name} onChange={(e) => setName(e.target.value)} />
-        <Select options={[
-          {
-            label: "RTL",
-            value: "rtl"
-          },
-          {
-            label: "LTR",
-            value: "ltr"
+        <Input.TextArea
+          value={name}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setName(e.target.value)
           }
-        ]} className="w-full" value={dir} onSelect={(e) => setDir(e)} />
+        />
+        <Select
+          options={[
+            {
+              label: "RTL",
+              value: "rtl",
+            },
+            {
+              label: "LTR",
+              value: "ltr",
+            },
+          ]}
+          className="w-full"
+          value={dir}
+          onSelect={(e: any) => setDir(e)}
+        />
         <Button
           onClick={async () => {
             await edit_project_name({
               projectID: projectID,
               projectName: name,
-              dir: dir
+              dir: dir,
             });
             window.location.reload();
           }}

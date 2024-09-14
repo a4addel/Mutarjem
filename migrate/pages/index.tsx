@@ -1,5 +1,12 @@
 import { Form as AntForm, Select, Input, Button, Form, Flex } from "antd";
-import { ErrorMessage, Field, FieldProps, Formik, FormikHandlers, FormikHelpers } from "formik";
+import {
+  ErrorMessage,
+  Field,
+  FieldProps,
+  Formik,
+  FormikHandlers,
+  FormikHelpers,
+} from "formik";
 import * as yup from "yup";
 import classnames from "classnames";
 import { useToggle } from "react-use";
@@ -41,25 +48,29 @@ export default function Home() {
     value: e.identifier,
   }));
 
-  const onSubmit = async (data: yup.InferType<typeof schema>,  formikHelpers: FormikHelpers<{
-    project_name: string;
-    dir: string;
-    input_lang: string;
-    language: string;
-    file: string;
-    qc_edition: never[];
-}>) => {
-  console.log(data.file);
-  
-  // @ts-ignore
-  if (!(data.file?.name + "").endsWith(".srt")) {
-    formikHelpers.setErrors({file: "File should '.srt'"})
-    return;
-  }
+  const onSubmit = async (
+    data: yup.InferType<typeof schema>,
+    formikHelpers: FormikHelpers<{
+      project_name: string;
+      dir: string;
+      input_lang: string;
+      language: string;
+      file: string;
+      qc_edition: never[];
+    }>,
+  ) => {
+    console.log(data.file);
+
+    // @ts-ignore
+    if (!(data.file?.name + "").endsWith(".srt")) {
+      formikHelpers.setErrors({ file: "File should '.srt'" });
+      return;
+    }
     const id = await createProject({
       projectName: data.project_name,
       // @ts-ignore
-      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)), dir: data.dir
+      text: JSON.stringify(DeepL_JOSN_To_State_Format(DallEData.json)),
+      dir: data.dir,
     });
     if (id) {
       n(`/magic/${id}`);
@@ -105,14 +116,13 @@ export default function Home() {
                   <Field name="dir">
                     {({ field }: FieldProps) => (
                       <Select
-
                         className={classnames("flex-grow", "flex-shrink-0")}
-                        onSelect={(e) =>
-                          form.setFieldValue(field.name, e)
-                        }
+                        onSelect={(e) => form.setFieldValue(field.name, e)}
                         allowClear
-
-                        options={[{ label: "LTR", value: "ltr" }, { label: "RTL", value: "rtl" }]}
+                        options={[
+                          { label: "LTR", value: "ltr" },
+                          { label: "RTL", value: "rtl" },
+                        ]}
                       />
                     )}
                   </Field>
@@ -180,18 +190,19 @@ export default function Home() {
                   </Field>
                 </Form.Item>
 
-
                 <Form.Item label="قواميس القران" required className="realtive">
-                  <div style={{
-                    display: loading ? "flex" : "none"
-                  }} className="absolute z-50 w-full h-full bg-slate-300 flex justify-center items-center" >
+                  <div
+                    style={{
+                      display: loading ? "flex" : "none",
+                    }}
+                    className="absolute z-50 w-full h-full bg-slate-300 flex justify-center items-center"
+                  >
                     <LoadingOutlined />
                   </div>
-                  
+
                   <Field name="qc_edition">
                     {({ field, form }: FieldProps) => (
                       <Select
-
                         value={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
                         onChange={(e) => form.setFieldValue(field.name, e)}
@@ -245,11 +256,12 @@ const schema = yup.object().shape({
     .notOneOf(
       [yup.ref("input_lang")],
       `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`,
-    ).oneOf(allowedLangs),
+    )
+    .oneOf(allowedLangs),
   file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
   qc_edition: yup
     .array()
     .of(yup.string())
     .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
-  dir: yup.string().oneOf(["rtl", "ltr"])
+  dir: yup.string().oneOf(["rtl", "ltr"]),
 });

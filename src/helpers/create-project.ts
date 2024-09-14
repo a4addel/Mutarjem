@@ -4,11 +4,11 @@ import { ProjectMetaPath, ProjectPath, ProjectTextPath } from "../consts";
 export default async function createProject({
   projectName,
   text,
-  dir
+  dir,
 }: {
   projectName: string;
   text: string;
-  dir: string
+  dir: string;
 }): Promise<false | string> {
   try {
     const id = v4();
@@ -28,4 +28,3 @@ export default async function createProject({
     return false;
   }
 }
-

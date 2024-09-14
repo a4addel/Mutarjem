@@ -1,23 +1,17 @@
+import React, { memo } from "react";
 import { Select } from "antd";
-import { memo } from "react";
+
+type ListItem = {
+  edition: string;
+  text: string;
+};
 
 type AyaComponentProps = {
   id: string;
-  list: {
-    edition: string;
-    text: string;
-  }[];
+  list: ListItem[];
   index: number;
   selected: string;
-  onSelect: ({
-    value,
-    index,
-    id,
-  }: {
-    value: string;
-    index: number;
-    id: string;
-  }) => void;
+  onSelect: (params: { value: string; index: number; id: string }) => void;
 };
 
 const AyaComponent: React.FC<AyaComponentProps> = ({
@@ -30,27 +24,25 @@ const AyaComponent: React.FC<AyaComponentProps> = ({
 }) => {
   return (
     <Select
-    {...rest}
-      placeholder={`-- Select Translation --`}
-      onChange={(e) => {
+      {...rest}
+      placeholder="-- Select Translation --"
+      onChange={(value: string) => {
         onSelect({
-          id: id,
-          index: index,
-          value: e,
+          id,
+          index,
+          value,
         });
       }}
       className="w-[calc(100%-20px)] text-center shadow-lg font-bold"
-      value={selected ? selected: (list.length > 0 ? list[0].text: "")}
+      value={selected || (list.length > 0 ? list[0].text : "")}
       defaultActiveFirstOption
-      options={list.map((e) => ({
+      options={list.map((item) => ({
         label: (
           <span>
-            <b>({e.edition})</b>
-            {"  "}
-            <i>{e.text}</i>
+            <b>({item.edition})</b> <i>{item.text}</i>
           </span>
         ),
-        value: e.text,
+        value: item.text,
       }))}
     />
   );

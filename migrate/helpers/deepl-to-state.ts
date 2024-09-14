@@ -9,8 +9,7 @@ export default function extractStateFromDallEArray(
   a: Item[],
 ): PrimaryListItem[] {
   return a.map((e) => buildPrimartItem(e));
-};
-
+}
 
 function buildPrimartItem(a: Item): PrimaryListItem {
   const { translate, section_time } = a;

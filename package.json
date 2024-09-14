@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "format": "prettier --write \"./**/**.{jsx, jx,ts,tsx,html,css}\""
+    "format": "prettier --write \"./**/**.{jsx, jx,ts,tsx,html,css}\"",
+    "build":"tauri build --target x86_64-pc-windows-msvc"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.1",
@@ -45,3 +45,5 @@
     "vite": "^5.0.0"
   }
 }
+
+

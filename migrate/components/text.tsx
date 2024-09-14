@@ -10,8 +10,8 @@ type TextComponentProps = {
 const TextComponent = ({
   value,
   onChange,
-  direction
-}:  TextComponentProps &  {direction: string}) => {
+  direction,
+}: TextComponentProps & { direction: string }) => {
   const [v, setValue] = useState("");
 
   React.useEffect(() => {
@@ -20,8 +20,8 @@ const TextComponent = ({
 
   return (
     <Input.TextArea
-       autoSize
-       dir={direction}
+      autoSize
+      dir={direction}
       className={classnames(
         "max-w-full",
         "text-left",
@@ -30,11 +30,10 @@ const TextComponent = ({
         "w-[calc(100%-20px)]",
         "text-center",
         "bold",
-        "font-bold"
-        
+        "font-bold",
       )}
       style={{
-        direction: `${direction}!important` as any
+        direction: `${direction}!important` as any,
       }}
       value={v}
       size="large"

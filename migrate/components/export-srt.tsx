@@ -6,11 +6,17 @@ import classname from "classnames";
 import { useToggle } from "react-use";
 import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 
-export default function exportSRT({ state, defaultName }: { state: PrimaryListItem[], defaultName: string }) {
+export default function exportSRT({
+  state,
+  defaultName,
+}: {
+  state: PrimaryListItem[];
+  defaultName: string;
+}) {
   const [name, setName] = useState(defaultName);
   useEffect(() => {
-    setName(defaultName)
-  },[])
+    setName(defaultName);
+  }, []);
   const [link, setLink] = useState("");
   const [open, toggle] = useToggle(false);
   const [isSRT, setIsSRT] = useState(false);

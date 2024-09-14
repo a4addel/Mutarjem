@@ -1,6 +1,9 @@
 import { PrimaryListItem } from "../types";
 
-export default function buildSrt(srtState: PrimaryListItem[], name="placeholder name"): string {
+export default function buildSrt(
+  srtState: PrimaryListItem[],
+  name = "placeholder name",
+): string {
   const data = convertStateToSRT(srtState);
 
   const link = URL.createObjectURL(new File(data, name + ".srt"));
