@@ -55,6 +55,9 @@
       },
       "deb": {
         
+      },
+      "macOS": {
+        "minimumSystemVersion": "10.13"
       }
     }
   }
