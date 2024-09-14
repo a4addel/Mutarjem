@@ -72,7 +72,6 @@ jobs:
       with:
         name: ${{ matrix.platform }}-app
         path: |
-          src-tauri/target/release/bundle/dmg/*.dmg
           src-tauri/target/release/bundle/msi/*.msi
           src-tauri/target/release/bundle/deb/*.deb
 
