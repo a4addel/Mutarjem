@@ -5,6 +5,7 @@
     "devPath": "http://localhost:1420",
     "distDir": "../dist"
   },
+  
   "package": {
     "productName": "Mutarjem",
     "version": "0.0.0"
@@ -38,7 +39,7 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
+      "targets": ["deb", "nsis", "msi", "app", "dmg", "updater"],
       "identifier": "com.ss.dev",
       "icon": [
         "icons/32x32.png",
@@ -49,8 +50,11 @@
       ],
       "windows": {
         "webviewInstallMode": {
-          "type": "embedBootstrapper"
+          "type": "offlineInstaller"
         }
+      },
+      "deb": {
+        
       }
     }
   }

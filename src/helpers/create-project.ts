@@ -2,6 +2,7 @@ import { BaseDirectory, createDir, writeFile } from "@tauri-apps/api/fs";
 import { v4 } from "uuid";
 import { ProjectMetaPath, ProjectPath, ProjectTextPath } from "../consts";
 export default async function createProject({
+  
   projectName,
   text,
   dir,

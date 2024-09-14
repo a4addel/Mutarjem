@@ -13,10 +13,10 @@ export default function exportSRT({
   state: PrimaryListItem[];
   defaultName: string;
 }) {
-  const [name, setName] = useState(defaultName);
+  const [name, setName] = useState(() => defaultName);
   useEffect(() => {
     setName(defaultName);
-  }, []);
+  }, [defaultName]);
   const [link, setLink] = useState("");
   const [open, toggle] = useToggle(false);
   const [isSRT, setIsSRT] = useState(false);

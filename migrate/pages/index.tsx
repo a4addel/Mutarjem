@@ -1,26 +1,26 @@
+import React, { useEffect, useState } from 'react';
 import { Form as AntForm, Select, Input, Button, Form, Flex } from "antd";
 import {
   ErrorMessage,
   Field,
   FieldProps,
   Formik,
-  FormikHandlers,
   FormikHelpers,
 } from "formik";
 import * as yup from "yup";
 import classnames from "classnames";
 import { useToggle } from "react-use";
-import Languages from "../languages";
-import DeepL_JOSN_To_State_Format from "../helpers/deepl-to-state";
 import { useNavigate } from "react-router-dom";
 import { fetch } from "@tauri-apps/api/http";
-import DallEData from "../data/data.json";
+import { LoadingOutlined } from "@ant-design/icons";
 
+import Languages from "../languages";
+import DeepL_JOSN_To_State_Format from "../helpers/deepl-to-state";
+import DallEData from "../data/data.json";
 import LayoutScreen from "../../src/screens/layout";
 import createProject from "../../src/helpers/create-project";
-import { useEffect, useState } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
-import { log } from "console";
+
+// Define types
 type Translations = {
   identifier: string;
   language: string;
@@ -31,39 +31,60 @@ type Translations = {
   direction: string;
 }[];
 
+interface FormValues {
+  project_name: string;
+  dir: string;
+  input_lang: string;
+  language: string;
+  file: File | string;
+  qc_edition: string[];
+}
+
+// Schema definition
+const allowedLangs = Languages.map((e) => e.key);
+const schema = yup.object().shape({
+  project_name: yup.string().required("ادخل اسماَ للمشروع"),
+  dir: yup.string().oneOf(["rtl", "ltr"]).required(),
+  input_lang: yup.string().required("اختر لغة المصدر").oneOf(allowedLangs),
+  language: yup
+    .string()
+    .required("اختر اللغة الهدف")
+    .notOneOf(
+      [yup.ref("input_lang")],
+      `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`
+    )
+    .oneOf(allowedLangs),
+  file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
+  qc_edition: yup
+    .array()
+    .of(yup.string())
+    .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
+});
+
 export default function Home() {
   const [loading, setLoading] = useToggle(false);
   const n = useNavigate();
   const [edition, setEditions] = useState<Translations>([]);
   const [failed_toget_edition, setFailed_toget_edition] = useState("");
+
   useEffect(() => {
-    let d = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setFailed_toget_edition("");
     }, 10000);
-    return () => clearTimeout(d);
+    return () => clearTimeout(timeout);
   }, [failed_toget_edition]);
 
-  const editions = ((edition || []) as Translations)?.map((e) => ({
+  const editions = (edition || []).map((e) => ({
     label: e.identifier,
     value: e.identifier,
   }));
 
   const onSubmit = async (
-    data: yup.InferType<typeof schema>,
-    formikHelpers: FormikHelpers<{
-      project_name: string;
-      dir: string;
-      input_lang: string;
-      language: string;
-      file: string;
-      qc_edition: never[];
-    }>,
+    data: FormValues,
+    formikHelpers: FormikHelpers<FormValues>
   ) => {
-    console.log(data.file);
-
-    // @ts-ignore
-    if (!(data.file?.name + "").endsWith(".srt")) {
-      formikHelpers.setErrors({ file: "File should '.srt'" });
+    if (typeof data.file === 'string' || !data.file.name.endsWith(".srt")) {
+      formikHelpers.setErrors({ file: "File should be '.srt'" });
       return;
     }
     const id = await createProject({
@@ -80,7 +101,7 @@ export default function Home() {
   return (
     <LayoutScreen>
       <div className={classnames("w-full", "max-w-lg", "mx-auto")}>
-        <Formik
+        <Formik<FormValues>
           validationSchema={schema}
           initialValues={{
             project_name: "",
@@ -92,32 +113,31 @@ export default function Home() {
           }}
           onSubmit={onSubmit}
         >
-          {(form) => {
-            return (
-              <AntForm className={classnames("flex", "flex-col", "gap-1")}>
-                <p className="text-center !text-4xl p-2 m-2 font-bold">
-                  أدخل بيانات المشروع
-                </p>
-                <Form.Item label="إسم المشروع" required>
-                  <Field name="project_name">
-                    {({ field }: FieldProps) => (
-                      <Input
-                        value={field.value}
-                        className={classnames("flex-grow", "flex-shrink-0")}
-                        onChange={(e) =>
-                          form.setFieldValue(field.name, e.target.value)
-                        }
-                      />
-                    )}
-                  </Field>
-                </Form.Item>
+          {(formikProps) => (
+            <AntForm className={classnames("flex", "flex-col", "gap-1")}>
+              {/* Form fields... */}
+              <Form.Item label="إسم المشروع" required>
+                <Field name="project_name">
+                  {({ field }: FieldProps<FormValues>) => (
+                    <Input
+                    // @ts-ignore
+                      value={field.value}
+                      className={classnames("flex-grow", "flex-shrink-0")}
+                      onChange={(e) =>
+                        formikProps.setFieldValue(field.name, e.target.value)
+                      }
+                    />
+                  )}
+                </Field>
+              </Form.Item>
 
-                <Form.Item label="جهة النص" required>
+              
+              <Form.Item label="جهة النص" required>
                   <Field name="dir">
                     {({ field }: FieldProps) => (
                       <Select
                         className={classnames("flex-grow", "flex-shrink-0")}
-                        onSelect={(e) => form.setFieldValue(field.name, e)}
+                        onSelect={(e) => formikProps.setFieldValue(field.name, e)}
                         allowClear
                         options={[
                           { label: "LTR", value: "ltr" },
@@ -134,7 +154,7 @@ export default function Home() {
                       <Select
                         defaultValue={field.value}
                         className={classnames("flex-grow", "flex-shrink-0")}
-                        onSelect={(e) => form.setFieldValue(field.name, e)}
+                        onSelect={(e) => formikProps.setFieldValue(field.name, e)}
                         options={Languages}
                       />
                     )}
@@ -214,54 +234,31 @@ export default function Home() {
                 </Form.Item>
                 <ErrorMessage name="qc_edition" />
 
-                <Input
-                  required
-                  onChange={(e) =>
-                    e?.target?.files &&
-                    form.setFieldValue("file", e.target.files[0])
-                  }
-                  accept=".srt"
-                  name="file"
-                  type="file"
-                />
 
-                <Button onClick={() => form.handleSubmit()}>هيا!</Button>
-                <Flex className="text-red">
-                  <ErrorMessage className="block" name="project_name" />
-                  <br />
-                  <ErrorMessage className="block" name="input_lang" />
-                  <br />
-                  <ErrorMessage className="block" name="language" />
-                  <br />
-                  <ErrorMessage className="block" name="qc_edition" />
-                  <br />
-                  <ErrorMessage className="block" name="file" />
-                  {failed_toget_edition}
-                </Flex>
-              </AntForm>
-            );
-          }}
+              <Input
+                required
+                onChange={(e) =>
+                  e?.target?.files &&
+                  formikProps.setFieldValue("file", e.target.files[0])
+                }
+                accept=".srt"
+                name="file"
+                type="file"
+              />
+
+              <Button onClick={() => formikProps.handleSubmit()}>هيا!</Button>
+              <Flex className="text-red">
+                <ErrorMessage className="block" name="project_name" />
+                <ErrorMessage className="block" name="input_lang" />
+                <ErrorMessage className="block" name="language" />
+                <ErrorMessage className="block" name="qc_edition" />
+                <ErrorMessage className="block" name="file" />
+                {failed_toget_edition}
+              </Flex>
+            </AntForm>
+          )}
         </Formik>
       </div>
     </LayoutScreen>
   );
 }
-const allowedLangs = Languages.map((e) => e.key);
-const schema = yup.object().shape({
-  project_name: yup.string().required("ادخل اسماَ للمشروع"),
-  input_lang: yup.string().required("اختر لغة المصدر").oneOf(allowedLangs),
-  language: yup
-    .string()
-    .required("اختر اللغة الهدف")
-    .notOneOf(
-      [yup.ref("input_lang")],
-      `لغه المصدر واللغة الهدف يجب ان يكونا مختلفتين`,
-    )
-    .oneOf(allowedLangs),
-  file: yup.mixed().required("اختر ملفاَ بصيغه .srt"),
-  qc_edition: yup
-    .array()
-    .of(yup.string())
-    .min(1, "اختر علي الاقل قاموسا قرانيا واحدا"),
-  dir: yup.string().oneOf(["rtl", "ltr"]),
-});

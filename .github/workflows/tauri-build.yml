@@ -11,47 +11,96 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
+
     steps:
-    - uses: actions/checkout@v2
-    
+    - uses: actions/checkout@v3
+
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '19'
-        
+        node-version: '20'
+
     - name: Install Rust stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        
+      uses: dtolnay/rust-toolchain@stable
+
     - name: Install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-        
-    
+
+    - name: Install PNPM
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
     - name: Install PNPM
       run: npm i -g pnpm
-    
-   
 
-    - name: Install app dependencies and build web
-      run: pnpm i
-    
-    - name: Install app dependencies and build web
-      run: pnpm build
-    
+    - name: Install app dependencies
+      run: pnpm install
+
     - name: Build Tauri app
       uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tagName: v__VERSION__
+        tagName: app-v__VERSION__ # This will be used if you're creating a release
         releaseName: "App v__VERSION__"
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.platform }}-app
+        path: |
+          src-tauri/target/release/bundle/dmg/*.dmg
+          src-tauri/target/release/bundle/msi/*.msi
+          src-tauri/target/release/bundle/deb/*.deb
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: app-v__VERSION__
+          release_name: App v__VERSION__
+          draft: true
+          prerelease: false
+
+      - uses: actions/download-artifact@v3
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./*
+          asset_name: app-${{ matrix.platform }}-v__VERSION__
+          asset_content_type: application/octet-stream

@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
-    "tauri": "tauri",
+    "tauri": "tauri dev",
     "format": "prettier --write \"./**/**.{jsx, jx,ts,tsx,html,css}\"",
-    "build":"tauri build"
+    "build":"tsc && vite build"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.1",
@@ -45,5 +45,3 @@
     "vite": "^5.0.0"
   }
 }
-
-
