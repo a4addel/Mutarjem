@@ -6,5 +6,5 @@ export default function setPath() {
   function handlePath(path: string) {
     setPathDir(path);
   }
-  return <></>;
+  return <p></p>;
 }
