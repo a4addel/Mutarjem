@@ -50,12 +50,57 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
 
-    - name: Install app dependencies
+    - name: Install PNPM
       run: npm i -g pnpm
 
     - name: Install app dependencies
       run: pnpm install
 
     - name: Build Tauri app
-      run: pnpm tauri build
+      uses: tauri-apps/tauri-action@v0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tagName: app-v__VERSION__ # This will be used if you're creating a release
+        releaseName: "App v__VERSION__"
+        releaseBody: "See the assets to download this version and install."
+        releaseDraft: true
+        prerelease: false
 
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.platform }}-app
+        path: |
+          src-tauri/target/release/bundle/dmg/*.dmg
+          src-tauri/target/release/bundle/msi/*.msi
+          src-tauri/target/release/bundle/deb/*.deb
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: app-v__VERSION__
+          release_name: App v__VERSION__
+          draft: true
+          prerelease: false
+
+      - uses: actions/download-artifact@v3
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./*
+          asset_name: app-${{ matrix.platform }}-v__VERSION__
+          asset_content_type: application/octet-stream

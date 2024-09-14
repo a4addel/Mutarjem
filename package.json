@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
-    "tauri": "tauri dev",
+    "tauri": "tauri",
     "format": "prettier --write \"./**/**.{jsx, jx,ts,tsx,html,css}\"",
     "build":"tsc && vite build"
   },
