@@ -92,6 +92,9 @@ jobs:
           draft: true
           prerelease: false
 
+      - name: List built files
+        run: ls -R src-tauri/target/release/bundle
+
       - uses: actions/download-artifact@v3
 
       - name: Upload Release Asset
@@ -100,6 +103,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./*
-          asset_name: app-${{ matrix.platform }}-v__VERSION__
+          asset_path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/deb/*.deb
+          asset_name: app-v__VERSION__
           asset_content_type: application/octet-stream
