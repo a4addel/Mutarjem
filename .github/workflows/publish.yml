@@ -1,10 +1,10 @@
-
-
 name: 'Publish'
+
 on:
   push:
     branches:
       - main
+
 jobs:
   publish-tauri:
     permissions:
@@ -51,8 +51,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__
-          releaseName: 'App v__VERSION__'
+          tagName: app-v${{ github.ref_name }}
+          releaseName: 'App v${{ github.ref_name }}'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
@@ -61,7 +61,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.target }}
+          name: app-v${{ github.ref_name }}-${{ matrix.platform }}
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/deb/*.deb
@@ -96,7 +96,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./x86_64-pc-windows-msvc/*.msi
+          asset_path: ./src-tauri/target/release/bundle/msi/*.msi
           asset_name: app-windows-v${{ github.ref_name }}.msi
           asset_content_type: application/x-msi
 
@@ -106,6 +106,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./x86_64-unknown-linux-gnu/*.deb
+          asset_path: ./src-tauri/target/release/bundle/deb/*.deb
           asset_name: app-linux-v${{ github.ref_name }}.deb
           asset_content_type: application/vnd.debian.binary-package
