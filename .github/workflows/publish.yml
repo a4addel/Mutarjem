@@ -1,5 +1,4 @@
-name: 'Publish'
-
+name: Publish
 on:
   push:
     branches:
@@ -41,7 +40,7 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - name: Install Pnpm
-        run: npm i -g pnpm 
+        run: npm i -g pnpm
 
       - name: Install frontend dependencies
         run: pnpm install
@@ -51,17 +50,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v${{ github.ref_name }}
-          releaseName: 'App v${{ github.ref_name }}'
+          tagName: app-v0.0.0  # Change this to your app version or use a variable
+          releaseName: 'App v0.0.0'  # Same here
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
 
-      - name: Upload artifact
+      - name: Upload artifact (Windows/Linux)
         uses: actions/upload-artifact@v3
         with:
-          name: app-v${{ github.ref_name }}-${{ matrix.platform }}
+          name: ${{ matrix.platform }}-artifact
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/deb/*.deb
@@ -79,8 +78,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v${{ github.ref_name }}
-          release_name: App v${{ github.ref_name }}
+          tag_name: app-v0.0.0  # Ensure consistency here
+          release_name: App v0.0.0
           draft: true
           prerelease: false
 
@@ -91,21 +90,23 @@ jobs:
         run: ls -R
 
       - name: Upload Release Asset (Windows)
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./src-tauri/target/release/bundle/msi/*.msi
-          asset_name: app-windows-v${{ github.ref_name }}.msi
+          asset_name: app-windows-v0.0.0.msi
           asset_content_type: application/x-msi
 
       - name: Upload Release Asset (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./src-tauri/target/release/bundle/deb/*.deb
-          asset_name: app-linux-v${{ github.ref_name }}.deb
+          asset_name: app-linux-v0.0.0.deb
           asset_content_type: application/vnd.debian.binary-package
