@@ -37,7 +37,11 @@ jobs:
     - name: Install PNPM
       run: npm i -g pnpm
     
+   
 
+    - name: Install app dependencies and build web
+      run: pnpm i
+    
     - name: Install app dependencies and build web
       run: pnpm build
     
