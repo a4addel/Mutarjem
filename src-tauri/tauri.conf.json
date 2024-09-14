@@ -39,7 +39,7 @@
     },
     "bundle": {
       "active": true,
-      "targets": ["deb", "nsis", "msi", "app", "dmg", "updater"],
+      "targets": ["deb", "nsis", "msi"],
       "identifier": "com.ss.dev",
       "icon": [
         "icons/32x32.png",
@@ -55,9 +55,6 @@
       },
       "deb": {
         
-      },
-      "macOS": {
-        "minimumSystemVersion": "10.13"
       }
     }
   }
