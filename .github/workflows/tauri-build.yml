@@ -55,7 +55,7 @@ jobs:
         run: npm i -g pnpm
 
       - name: build
-        run: pnpm build
+        run: pnpm tauri build
 
 
       - uses: tauri-apps/tauri-action@v0
