@@ -1,10 +1,8 @@
 name: Publish
-
 on:
   push:
     branches:
       - main
-
 jobs:
   publish-tauri:
     permissions:
@@ -41,11 +39,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v0.0.1111
-          releaseName: 'App v0.0.1111'
+          tagName: app-v0.0.11112
+          releaseName: 'App v0.0.11112'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
+      - name: Debug - List build output
+        run: |
+          ls -R src-tauri/target/release/bundle
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -53,6 +54,9 @@ jobs:
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/deb/*.deb
+      - name: Debug - List uploaded artifacts
+        run: |
+          ls -R ${{ github.workspace }}
 
   create-release:
     needs: publish-tauri
@@ -70,8 +74,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v0.0.1111
-          release_name: App v0.0.1111
+          tag_name: app-v0.0.11112
+          release_name: App v0.0.11112
           draft: true
           prerelease: false
       - name: Upload Release Asset (Windows)
@@ -81,7 +85,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/windows-latest-artifact/*.msi
-          asset_name: app-windows-v0.0.1111.msi
+          asset_name: app-windows-v0.0.11112.msi
           asset_content_type: application/x-msi
       - name: Upload Release Asset (Linux)
         uses: actions/upload-release-asset@v1
@@ -90,5 +94,8 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/ubuntu-22.04-artifact/*.deb
-          asset_name: app-linux-v0.0.1111.deb
+          asset_name: app-linux-v0.0.11112.deb
           asset_content_type: application/vnd.debian.binary-package
+      - name: Debug - List final artifacts
+        run: |
+          ls -R artifacts
