@@ -5,7 +5,6 @@
     "devPath": "http://localhost:1420",
     "distDir": "../dist"
   },
-  
   "package": {
     "productName": "Mutarjem",
     "version": "0.0.0"
@@ -30,19 +29,19 @@
         "scope": [
           "$HOME/**"
         ]
-      } 
+      }
     },
     "windows": [
       {
         "title": "مُترجم"
-       }
+      }
     ],
     "security": {
       "csp": null
     },
     "bundle": {
       "active": true,
-      "targets": ["deb", "nsis", "msi"],
+      "targets": ["deb", "rpm", "appimage", "nsis", "msi"],
       "identifier": "com.ss.dev",
       "icon": [
         "icons/32x32.png",
@@ -51,13 +50,18 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
+      "linux": {
+        "deb": {
+          "depends": []
+        },
+        "rpm": {
+          "depends": []
+        }
+      },
       "windows": {
         "webviewInstallMode": {
           "type": "downloadBootstrapper"
         }
-      },
-      "deb": {
-        
       }
     }
   }

@@ -31,6 +31,15 @@ type Translations = {
   direction: string;
 }[];
 
+const initFormValues = {
+  project_name: "",
+  dir: "",
+  input_lang: "",
+  language: "",
+  file: "",
+  qc_edition: [],
+}
+
 interface FormValues {
   project_name: string;
   dir: string;
@@ -103,14 +112,7 @@ export default function Home() {
       <div className={classnames("w-full", "max-w-lg", "mx-auto")}>
         <Formik<FormValues>
           validationSchema={schema}
-          initialValues={{
-            project_name: "",
-            dir: "",
-            input_lang: "",
-            language: "",
-            file: "",
-            qc_edition: [],
-          }}
+          initialValues={initFormValues}
           onSubmit={onSubmit}
         >
           {(formikProps) => (
