@@ -97,7 +97,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./src-tauri/target/release/bundle/msi/*.msi
-          asset_name: app-windows-v0.0.0.msi
+          asset_name: app-windows-v0.0.1.msi
           asset_content_type: application/x-msi
 
       - name: Upload Release Asset (Linux)
@@ -108,5 +108,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./src-tauri/target/release/bundle/deb/*.deb
-          asset_name: app-linux-v0.0.0.deb
+          asset_name: app-linux-v0.0.1.deb
           asset_content_type: application/vnd.debian.binary-package
