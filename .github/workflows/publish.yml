@@ -78,8 +78,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v0.0.0  # Ensure consistency here
-          release_name: App v0.0.0
+          tag_name: app-v0.0.1  # Ensure consistency here
+          release_name: App v0.0.1
           draft: true
           prerelease: false
 
